@@ -3,6 +3,7 @@
 from __future__ import division
 import numpy as np
 import matplotlib.pyplot as plt
+import matplotlib.animation as animation
 import pdb
 
 '''Script para resolver numéricamente la ecuación de Fisher-KPP, usando
@@ -62,13 +63,29 @@ def mostar_resultado(sol):
     x_values = np.linspace(X_IN, X_FIN, numero_x)
     ax.set_ylim(0, 1)
     ax.set_xlim(0, 1)
+    ax.set_xlabel("X en unidades arbitrarias de espacio")
+    ax.set_ylabel("Densidad en unidades arbitrarias")
+    ax.set_title("Densidad en el espacio para tiempo entre t=0 y t=10")
     for i in range(0, numero_t):
         ax.plot(x_values, sol[i, :], color="r")
+
+    # animacion
+    fig2, ax2 = plt.subplots()
+    ims = []
+    ax2.set_xlabel("X en unidades arbitrarias de espacio")
+    ax2.set_ylabel("Densidad en unidades arbitrarias")
+    ax2.set_title("Densidad en el espacio para tiempo entre t=0 y t=10")
+    for add in np.arange(numero_t):
+        ims.append(plt.plot(x_values, sol[add, :], color="b", label="t= " + str(add)))
+    im_ani = animation.ArtistAnimation(fig2, ims, interval=50, repeat_delay=3000,
+                                       blit=True)
+    ax2.legend()
+    #im_ani.save('ani.gif', fps=4);
     plt.show()
 
 # Main
 # Setup
-T_FIN = 4       # tiempo final
+T_FIN = 10       # tiempo final
 T_IN = 0        # tiempo inicial
 X_FIN = 1       # extremo 2
 X_IN = 0        # extremo 1
