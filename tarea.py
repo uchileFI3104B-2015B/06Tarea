@@ -30,10 +30,12 @@ def poner_condiciones_iniciales():
     solucion[0, :] = fila_inicial
 
 
-def poner_condiciones_borde():
-    '''define condiciones rígidas de borde para todo t'''
-    solucion[:, 0] = BORDE_1
-    solucion[:, (numero_pasos_x) * h] = BORDE_2
+def poner_condiciones_borde(solucion, N, N_t):
+    '''define condiciones rígidas de borde para todo t, recibe la
+    cantidad de pasos en x(N), y la cantidad de pasos en t (N_t)'''
+    for i in range(N_t + 1):
+        solucion[i, N] = BORDE_2
+        solucion[i, 0] = BORDE_1
 
 
 def b(t, k):
@@ -90,14 +92,15 @@ BORDE_1 = 1     # condicion de borde 1
 BORDE_2 = 0     # condicion de borde 2
 r = (GAMMA * e) / (2 * h ** 2)
 
-A_menos = -r
+A_menos = -1 * r
 A_0 = 1 + 2 * r
-A_mas = -r
+A_mas = -1 * r
 
 # Main
 solucion = iniciar_solucion(numero_pasos_t, numero_pasos_x)
 poner_condiciones_iniciales()
-poner_condiciones_borde()
+poner_condiciones_borde(solucion, numero_pasos_x, numero_pasos_t)
+print(solucion[:,-1])
 for i in range(int(numero_pasos_t)):
     avance_temporal(solucion, numero_pasos_x, i+1)
 mostar_resultado(solucion)
