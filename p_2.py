@@ -9,21 +9,15 @@ import locale
 
 '''Script para resolver numéricamente la ecuación de Fisher-KPP, usando
 Crank Nicolson.
-dn/dt = gamma * d2n/dx2 + mu* n - mu * n^2 '''
+dn/dt = gamma * d2n/dx2 + mu* n - mu * n^3 '''
 
-def funcion_inicial(x):
-    '''función que representa la condicion inicial, recibe un x, y devuelve
-    el valor de la función evaluada'''
-    return np.exp(- x ** 2 / 0.1)
+np.random.seed(3)
 
 
 def poner_condiciones_iniciales(S, N, h):
     '''llena la fila 0 de la matriz con la condición inicial,
     retrona la nueva matriz'''
-    x = np.linspace(X_IN, X_FIN, N)
-    vfuncion_inicial = np.vectorize(funcion_inicial) # vectorizar funcion
-    fila_inicial = vfuncion_inicial(x)
-    S = fila_inicial
+    S = np.random.uniform(low=-0.3, high=0.3, size=N)
     S[0] = BORDE_1
     S[-1] = BORDE_2
     return S
@@ -34,7 +28,7 @@ def calcula_b(b, N, r):
     al que se quiere calcular), para cada punto k'''
     for k in range(1, N - 1):
         b[k] = (S[k+1] * r + S[k-1] * r +
-               S[k] * (e * MU * (1 - S[k]) + 1 - 2 * r))
+               S[k] * (e * MU * (1 - S[k] ** 2) + 1 - 2 * r))
 
 
 def encontrar_alfa_beta(alfa, beta, b, r,N ):
@@ -63,20 +57,18 @@ def mostar_resultado(sol):
     '''grafica el cada fila de sol vs x en el mismpo plot'''
     fig, ax = plt.subplots()
     x_values = np.linspace(X_IN, X_FIN, numero_x)
-    ax.set_ylim(0, 1)
-    ax.set_xlim(0, 1)
     ax.set_xlabel("X en unidades arbitrarias de espacio")
     ax.set_ylabel("Densidad en unidades arbitrarias")
     ax.set_title("Densidad en el espacio para tiempo entre t=0 y t=10")
     for i in range(0, numero_t):
         ax.plot(x_values, sol[i, :], color="r")
-    fig.savefig("im1.jpg")
+    fig.savefig("im2.jpg")
     # animacion
     fig2, ax2 = plt.subplots()
     ims = []
     ax2.set_xlabel("X en unidades arbitrarias de espacio")
     ax2.set_ylabel("Densidad en unidades arbitrarias")
-    ax2.set_title("Densidad en el espacio para tiempo entre t=0 y t=10")
+    ax2.set_title(("Densidad en el espacio para tiempo entre t=0 y t=10."))
     for add in np.arange(numero_t):
         ims.append(plt.plot(x_values, sol[add, :], color="b", label="t= " + str(add)))
     im_ani = animation.ArtistAnimation(fig2, ims, interval=50, repeat_delay=3000,
@@ -98,7 +90,7 @@ e = (T_FIN - T_IN) / (numero_pasos_t)
 h = (X_FIN - X_IN) / (numero_pasos_x)
 GAMMA = 0.001
 MU = 1.5
-BORDE_1 = 1     # condicion de borde 1
+BORDE_1 = 0     # condicion de borde 1
 BORDE_2 = 0     # condicion de borde 2
 r = (GAMMA * e) / (2 * h ** 2)
 
