@@ -8,16 +8,16 @@ import pdb
 '''Script para resolver numéricamente la ecuación de Fisher-KPP, usando
 Crank Nicolson '''
 
-e = 0.1     # paso temporal
-h = 1 / 10 # paso espacial
+e = 0.1         # paso temporal
+h = 1 / 5000    # paso espacial
 GAMMA = 0.001
 MU = 1.5
-T_FIN = 4   # tiempo final
-T_IN = 0    # tiempo inicial
-X_FIN = 1   # extremo 2
-X_IN = 0    # extremo 1
-BORDE_1 = 1 # condicion de borde 1
-BORDE_2 = 0 # condicion de borde 2
+T_FIN = 4       # tiempo final
+T_IN = 0        # tiempo inicial
+X_FIN = 1       # extremo 2
+X_IN = 0        # extremo 1
+BORDE_1 = 1     # condicion de borde 1
+BORDE_2 = 0     # condicion de borde 2
 r = (GAMMA * e) / (2 * h ** 2)
 A_menos = -r
 A_0 = 1 + 2 * r
@@ -87,6 +87,8 @@ def mostar_resultado(sol):
     '''grafica el cada fila de sol vs x en el mismpo plot'''
     fig, ax = plt.subplots()
     x_values = np.linspace(X_IN, X_FIN, numero_pasos_x + 1)
+    ax.set_ylim(0, 1)
+    ax.set_xlim(0, 1)
     ax.plot(x_values, np.transpose(sol))
     plt.show()
 
@@ -97,5 +99,6 @@ numero_pasos_x = (X_FIN - X_IN) / h
 solucion = iniciar_solucion(numero_pasos_t, numero_pasos_x)
 poner_condiciones_iniciales()
 poner_condiciones_borde()
-iterar_crank_nicolson(1)
+for i in range(int(numero_pasos_t)):
+    iterar_crank_nicolson(i + 1)
 mostar_resultado(solucion)
