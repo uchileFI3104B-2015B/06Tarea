@@ -12,7 +12,15 @@ def calculo_b(n, b, r, dt):
     for i in range(1, len(b)-1):
         b[i] = r*n[i+1] + (1-2*r)*n[i] + r*n[i-1] + dt*(n[i] + n[i]**2)
 
-def calc_alpha_beta():
+def calc_alpha_beta(alpha, beta, b, r):
+    A_mas = -1 * r
+    A_cer = (1 + 2 * r)
+    A_men = -1 * r
+    alpha[0] = 0
+    beta[0] = 1  # viene de la condicion de borde n(t, 0) = 1
+    for i in range(1, len(b)):
+        alpha[i] = -A_mas / (A_cer + A_men*alpha[i-1])
+        beta[i] = (b[i] - A_men*beta[i-1]) / (A_men*alpha[i-1] + A_cer)
     pass
 
 def dt_step():
@@ -40,7 +48,7 @@ n_sol[0, :] = n.copy()
 
 for i in range(1, N_t):
     calculo_b(n, b, r, dt)
-    calc_alpha_beta(alpha, beta, b, r, N_x)
-    dt_step(n, n_sig, alpha, beta, N_x)
+    calc_alpha_beta(alpha, beta, b, r)
+    dt_step(n, n_sig, alpha, beta)
     n = n_sig.copy()
     n_sol[i, :] = n.copy()
