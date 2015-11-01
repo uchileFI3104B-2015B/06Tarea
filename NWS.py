@@ -7,9 +7,12 @@ import matplotlib.pyplot as plt
 
 np.random.seed(167)
 
+
 def calculo_b(n, b, r, dt):
     for i in range(1, len(b)-1):
         b[i] = r*n[i+1] + (1-2*r)*n[i] + r*n[i-1] + dt*(n[i] - n[i]**3)
+    pass
+
 
 def calc_alpha_beta(alpha, beta, b, r):
     A_mas = -1 * r
@@ -21,6 +24,7 @@ def calc_alpha_beta(alpha, beta, b, r):
         alpha[i] = -A_mas / (A_cer + A_men*alpha[i-1])
         beta[i] = (b[i] - A_men*beta[i-1]) / (A_men*alpha[i-1] + A_cer)
     pass
+
 
 def dt_step(n, n_sig, alpha, beta):
     n_sig[0] = 0
@@ -50,7 +54,7 @@ n_sig = np.zeros(N_x)
 alpha = np.zeros(N_x)
 beta = np.zeros(N_x)
 b = np.zeros(N_x)
-n_sol = np.zeros((N_t,N_x))
+n_sol = np.zeros((N_t, N_x))
 n_sol[0, :] = n.copy()
 
 for i in range(1, N_t):

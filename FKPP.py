@@ -4,15 +4,19 @@
 import numpy as np
 import matplotlib.pyplot as plt
 
+
 def set_condicion_inicial(n, h, Lx):
     for i in range(len(n)):
         n[i] = np.exp(-(h/Lx * i)**2 / 0.1)
     n[len(n)-1] = 0
     pass
 
+
 def calculo_b(n, b, r, dt):
     for i in range(1, len(b)-1):
         b[i] = r*n[i+1] + (1-2*r)*n[i] + r*n[i-1] + dt*(n[i] - n[i]**2)
+    pass
+
 
 def calc_alpha_beta(alpha, beta, b, r):
     A_mas = -1 * r
@@ -25,12 +29,14 @@ def calc_alpha_beta(alpha, beta, b, r):
         beta[i] = (b[i] - A_men*beta[i-1]) / (A_men*alpha[i-1] + A_cer)
     pass
 
+
 def dt_step(n, n_sig, alpha, beta):
     n_sig[0] = 1
     n_sig[-1] = 0
     for i in range(len(n) - 2, 0, -1):
         n_sig[i] = alpha[i] * n_sig[i+1] + beta[i]
     pass
+
 
 mu = 1.5
 gamma = 0.001
@@ -49,7 +55,7 @@ n_sig = np.zeros(N_x)
 alpha = np.zeros(N_x)
 beta = np.zeros(N_x)
 b = np.zeros(N_x)
-n_sol = np.zeros((N_t,N_x))
+n_sol = np.zeros((N_t, N_x))
 n_sol[0, :] = n.copy()
 
 for i in range(1, N_t):
