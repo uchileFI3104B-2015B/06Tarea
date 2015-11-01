@@ -3,7 +3,6 @@
 from __future__ import division
 import numpy as np
 import matplotlib.pyplot as plt
-from mpl_toolkits.mplot3d import axes3d
 import pdb
 
 '''Script para resolver numéricamente la ecuación de Fisher-KPP, usando
@@ -84,8 +83,12 @@ def iterar_crank_nicolson(t_actual):
         solucion[t_actual, k + 1] = alfa[k] * solucion [t_actual, k] + beta[k]
 
 
-def mostar_resultado():
-    '''  grafica el resultado'''
+def mostar_resultado(sol):
+    '''grafica el cada fila de sol vs x en el mismpo plot'''
+    fig, ax = plt.subplots()
+    x_values = np.linspace(X_IN, X_FIN, numero_pasos_x + 1)
+    ax.plot(x_values, np.transpose(sol))
+    plt.show()
 
 
 # Main
@@ -95,5 +98,4 @@ solucion = iniciar_solucion(numero_pasos_t, numero_pasos_x)
 poner_condiciones_iniciales()
 poner_condiciones_borde()
 iterar_crank_nicolson(1)
-
-mostar_resultado()
+mostar_resultado(solucion)
