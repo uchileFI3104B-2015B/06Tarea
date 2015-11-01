@@ -13,7 +13,6 @@ dn/dt = gamma * d2n/dx2 + mu* n - mu * n^3 '''
 
 np.random.seed(3)
 
-
 def poner_condiciones_iniciales(S, N, h):
     '''llena la fila 0 de la matriz con la condición inicial,
     retrona la nueva matriz'''
@@ -73,7 +72,6 @@ def mostar_resultado(sol):
         ims.append(plt.plot(x_values, sol[add, :], color="b", label="t= " + str(add)))
     im_ani = animation.ArtistAnimation(fig2, ims, interval=50, repeat_delay=3000,
                                        blit=True)
-    # im_ani.save('/tmp/animation.gif', writer='imagemagick', fps=10)
     plt.show()
 
 # Main
