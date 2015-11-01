@@ -23,7 +23,11 @@ def calc_alpha_beta(alpha, beta, b, r):
         beta[i] = (b[i] - A_men*beta[i-1]) / (A_men*alpha[i-1] + A_cer)
     pass
 
-def dt_step():
+def dt_step(n, n_sig, alpha, beta):
+    n_sig[0] = 1
+    n_sig[-1] = 0
+    for i in range(len(n) - 2, 0, -1):
+        n_sig[i] = alpha[i] * n_sig[i+1] + beta[i]
     pass
 
 mu = 1.5
