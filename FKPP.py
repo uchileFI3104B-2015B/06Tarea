@@ -2,15 +2,17 @@
 # -*- coding: utf-8 -*-
 
 import numpy as np
+import matplotlib.pyplot as plt
 
 def set_condicion_inicial(n, h, Lx):
     for i in range(len(n)):
         n[i] = np.exp(-(h/Lx * i)**2 / 0.1)
+    n[len(n)-1] = 0
     pass
 
 def calculo_b(n, b, r, dt):
     for i in range(1, len(b)-1):
-        b[i] = r*n[i+1] + (1-2*r)*n[i] + r*n[i-1] + dt*(n[i] + n[i]**2)
+        b[i] = r*n[i+1] + (1-2*r)*n[i] + r*n[i-1] + dt*(n[i] - n[i]**2)
 
 def calc_alpha_beta(alpha, beta, b, r):
     A_mas = -1 * r
@@ -36,9 +38,9 @@ N_x = 501
 # Cambio a sistema adimensional
 L_x = 1.0/np.sqrt(gamma/mu)
 h = 0.002*L_x
-T = 10*mu
+T = 7*mu
 dt = (h**2)/4.0
-N_t = np.ceil(T/dt)
+N_t = int(np.ceil(T/dt))
 
 r = dt/(2*h**2)
 n = np.zeros(N_x)
@@ -56,3 +58,14 @@ for i in range(1, N_t):
     dt_step(n, n_sig, alpha, beta)
     n = n_sig.copy()
     n_sol[i, :] = n.copy()
+
+x = np.linspace(0, 1, N_x)
+fig = plt.figure(1)
+fig.clf()
+ax = fig.add_subplot(111)
+
+for i in range(0, N_t, 100):
+    ax.plot(x, n_sol[i, :], color='b')
+
+plt.show()
+plt.draw()
