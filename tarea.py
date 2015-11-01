@@ -40,7 +40,7 @@ def encontrar_alfa_beta(alfa, beta, b, r,N ):
     A_menos = -1* r
     A_0 = (1 + 2 * r)
     alfa[0] = 0                # condiciones finales para alfa y beta
-    beta[0] = BORDE_2
+    beta[0] = BORDE_1
 
     for k in range(1, N): # iterar para llenar valores de alfa y beta
         alfa[k] = -1 * A_mas / (A_menos * alfa[k-1] + A_0)
