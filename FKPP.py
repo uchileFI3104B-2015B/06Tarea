@@ -73,5 +73,10 @@ ax = fig.add_subplot(111)
 for i in range(0, N_t, 100):
     ax.plot(x, n_sol[i, :], color='b')
 
+for j in range(50, N_x - 50, 50):
+    ax.arrow(x[j], n_sol[100, j], 0.0,
+             2.9*(n_sol[6900, j] - n_sol[100, j])/3 - 0.05, head_width=0.025,
+             head_length=0.05, fc='r', ec='r')
+
 plt.show()
 plt.draw()
