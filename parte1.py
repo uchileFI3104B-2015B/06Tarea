@@ -50,3 +50,8 @@ n = n_inicial
 M = M(x)                # Matriz de coeficientes
 Im = Imod(x)            # matriz identidad modificada
 I = identity(len(x))    # matriz identidad
+theta = 0.5 * np.ones(len(x))
+theta[0] = 0.0
+theta[-1] = 0.0
+theta_matrix = dia_matrix((theta, 0), shape=(len(x), len(x))).tocsc()
+theta_matrix_1m = dia_matrix((1-theta, 0), shape=(len(x), len(x))).tocsc()
