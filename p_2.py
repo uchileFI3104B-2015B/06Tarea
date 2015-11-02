@@ -11,7 +11,7 @@ import locale
 Crank Nicolson.
 dn/dt = gamma * d2n/dx2 + mu* n - mu * n^3 '''
 
-np.random.seed(3)
+np.random.seed(10)
 
 def poner_condiciones_iniciales(S, N, h):
     '''llena la fila 0 de la matriz con la condición inicial,
