@@ -44,9 +44,9 @@ def mostar_resultado(sol):
     x_values = np.linspace(x_ini, x_fin, dis_x)
     ax.set_ylim(0, 1)
     ax.set_xlim(0, 1)
-    ax.set_xlabel("X")
+    ax.set_xlabel("Posicion")
     ax.set_ylabel("Densidad")
-    ax.set_title("Densidad en el espacio para tiempo entre t=0 y t=10")
+    ax.set_title("Densidad entre t=0 y t=10")
 
     for i in range(0, dis_t):
         ax.plot(x_values, sol[i, :], color="r")
@@ -54,9 +54,9 @@ def mostar_resultado(sol):
     # animacion
     fig2, ax2 = plt.subplots()
     ims = []
-    ax2.set_xlabel("X en unidades arbitrarias de espacio")
-    ax2.set_ylabel("Densidad en unidades arbitrarias")
-    ax2.set_title("Densidad en el espacio para tiempo entre t=0 y t=10")
+    ax2.set_xlabel("Posicion")
+    ax2.set_ylabel("Densidad")
+    ax2.set_title("Densidad entre t=0 y t=10")
     for add in np.arange(dis_t):
         ims.append(plt.plot(x_values, sol[add, :], color="b", label="t= " + str(add)))
     im_ani = animation.ArtistAnimation(fig2, ims, interval=50, repeat_delay=3000,
