@@ -1,4 +1,3 @@
-
 '''
 
 '''
@@ -7,7 +6,7 @@ from __future__ import division
 import numpy as np
 import matplotlib.pyplot as plt
 
-np.random.seed(456764) #  Fijar semilla
+np.random.seed(456764)  # Fijar semilla
 
 
 def inicializa_T(T, N_steps, h):
@@ -25,9 +24,11 @@ def inicializa_T(T, N_steps, h):
 
 #  Crank nicolson y Euler explicito
 
+
 def calcula_b(b, N_steps, r):
     for j in range(1, N_steps - 1):
-        b[j] = r * T[j+1] + (dt * mu * ( 1 - T[j]**2) + 1 - 2 * r) * T[j] + r * T[j-1]
+        b[j] = r * T[j+1] + (dt * mu * (1 - T[j]**2) + 1 - 2 * r) * T[j] + \
+               r * T[j-1]
 
 
 def calcula_alpha_y_beta(alhpa, beta, b, r, N_Steps):

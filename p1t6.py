@@ -1,4 +1,3 @@
-
 '''
 
 '''
@@ -22,7 +21,7 @@ def inicializa_T(T, N_steps, h):
 #  C
 def calcula_b(b, N_steps, r):
     for j in range(1, N_steps - 1):
-        b[j] = r * T[j+1] + (dt * mu * ( 1 - T[j]) + 1 - 2 * r) * T[j] + r * T[j-1]
+        b[j] = r * T[j+1] + (dt * mu * (1 - T[j]) + 1 - 2 * r) * T[j] + r * T[j-1]
 
 
 def calcula_alpha_y_beta(alhpa, beta, b, r, N_Steps):
