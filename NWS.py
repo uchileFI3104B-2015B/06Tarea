@@ -101,10 +101,11 @@ for j in range(50, N_x - 50, 50):
              1*(n_sol[6900, j] - n_sol[100, j])/3, head_width=0.025,
              head_length=0.05, fc='r', ec='r')
 ax.set_xlabel('$x$')
-ax.set_ylabel('$n(x,t)$')
+ax.set_ylabel('$n$')
 ax.legend()
 ax.set_title('Curvas de $n(x,t)$ para valores fijos de $t$, random seed = 347')
 ax.set_ylim([-1.05, 1.3])
+plt.grid()
 plt.savefig('NWS1.eps')
 plt.show()
 plt.draw()
