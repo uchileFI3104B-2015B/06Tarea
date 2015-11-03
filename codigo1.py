@@ -1,7 +1,8 @@
 '''
 Este script resuelve numéricamente la ecuación de Fisher-KPP, usando el metodo
 de Crank Nicolson y el de Euler explicito. La ecuacion corresponde a
-dT/dt = gamma * d2T/dx2 + mu * T - mu * T^2
+dT/dt = gamma * d2T/dx2 + mu * T - mu * T^2 , con gamma = 0.001 y mu = 1.5 y
+condiciones de borde T(t,0) = 1, T(t,1) = 0 y T(0,x) = exp(-x^2 / 0.1)
 '''
 
 from __future__ import division
@@ -21,11 +22,10 @@ def inicializa_T(T, N_steps, h):
 
 
 
-#Con solucion Crank Nicolson y Euler explicito
+# Con solucion Crank Nicolson y Euler explicito
 def calcula_b(b, N_steps, r):
     for j in range(1, N_steps - 1):
-        b[j] = r * T[j+1] + (1-2*r) * T[j] + r * T[j-1] +
-               T[j] * (dt * mu - dt * mu T[j])
+        b[j] = r * T[j+1] + (1-2*r) * T[j] + r * T[j-1] + T[j] * (dt * mu - dt * mu * T[j])
 
 
 
@@ -49,24 +49,28 @@ def avanza_paso_temporal(T, T_next, alpha, beta, N_steps):
 
 # Main
 
-# setup
+# Setup
 gamma = 0.001
 mu = 1.5
 
-#Condiciones de borde para T(t,0) y T(t,1) respectivamente
+# Condiciones de borde para T(t,0) y T(t,1) respectivamente
 CB1 = 1
 CB2 = 0
 
 N_steps = 500
-N_pasos_temporales =
+
+# Paso temporal dt
+dt = 0.01
+t_inicial = 0
+t_final = 4
+N_pasos_temporales = ((t_final - t_inicial) / dt) + 1
+
 x_inicial = 0
 x_final = 1
-t_inicial =
-t_final =
-#Paso espacial h
+# Paso espacial h
 h = (x_final - x_inicial) / (N_steps - 1)
-#Paso temporal dt
-dt = (t_final - t_inicial) / (N_pasos_temporales - 1)
+
+
 
 r = (gamma * dt) / (2 * h ** 2)
 
@@ -78,17 +82,36 @@ b = np.zeros(N_steps)
 alpha = np.zeros(N_steps)
 beta = np.zeros(N_steps)
 
-#Pone las condiciones iniciales
+# Pone las condiciones iniciales
 inicializa_T(T, N_steps, h)
 
 # Queremos guardar las soluciones en cada paso
 T_solucion = np.zeros((N_pasos_temporales, N_steps))
 T_solucion[0, :] = T.copy()
 
-#Crank Nicolson
-for i in range(1, N_pasos_temporales):
+# Iteracion
+for i in range(1, int(N_pasos_temporales)):
     calcula_b(b, N_steps, r)
     calcula_alpha_y_beta(alpha, beta, b, r, N_steps)
     avanza_paso_temporal(T, T_next, alpha, beta, N_steps)
     T = T_next.copy()
     T_solucion[i, :] = T.copy()
+
+# Plot
+
+x = np.linspace(x_inicial, x_final, N_steps)
+
+fig = plt.figure(1)
+fig.clf()
+ax = fig.add_subplot(111)
+
+for i in range(0, int(N_pasos_temporales), 20):
+    ax.plot(x, T_solucion[i, :])
+ax.set_ylim(0, 1)
+ax.set_xlabel("Posicion en el espacio $x$ [adimensional]")
+ax.set_ylabel("Densidad de la especie $n$ [adimensional]")
+ax.set_title("Grafico de densidad versus posicion, entre t=0 y t=4")
+
+fig.savefig("p_1.png")
+plt.show()
+plt.draw()
