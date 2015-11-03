@@ -14,7 +14,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 from scipy.integrate import simps
 from scipy.sparse import (spdiags, coo_matrix, csc_matrix,
-dia_matrix, dok_matrix, identity)
+                          dia_matrix, dok_matrix, identity)
 
 
 def solucion_inicial(x, t=0):
