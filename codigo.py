@@ -21,7 +21,7 @@ def inicializa_T(T, N_steps, h):
 def calcula_b(b, N_steps, r):
     for j in range(1, N_steps - 1):
         b[j] = (T[j+1] * r  + T[j-1] * r +
-                T[j] * (1 + e * mu * (1 - T[j])))
+                T[j] * (1 + e * mu * (1 - T[j]) - 2 * r))
 
 
 def calcula_alpha_y_beta(alhpa, beta, b, r, N_Steps):
@@ -50,7 +50,7 @@ mu = 1.5
 
 
 N_steps = 500
-N_pasos_temporales = ( 4 / e ) + 1
+N_pasos_temporales = ( 5 / e ) + 1
 
 h = 1 / (N_steps - 1)
 
