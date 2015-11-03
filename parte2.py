@@ -57,7 +57,7 @@ theta[-1] = 0.0
 theta_matrix = dia_matrix((theta, 0), shape=(len(x), len(x))).tocsc()
 theta_matrix_1m = dia_matrix((1-theta, 0), shape=(len(x), len(x))).tocsc()
 
-# Time stepping loop
+
 STEPS = 500
 PLOTS = 5
 fig = plt.figure(1)
@@ -66,7 +66,7 @@ ax = plt.subplot(111)
 
 
 for i in range(0, STEPS+1):
-    # como si creara una sola lista larga
+    # crea una sola lista larga
     n_array = np.asarray(n).flatten()
 
     # reaccion (parte no lineal, calculada siempre)
