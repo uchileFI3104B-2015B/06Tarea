@@ -15,7 +15,7 @@ dn/dt = gamma * d2n/dx2 + mu* n - mu * n^2 '''
 def funcion_inicial(x):
     '''función que representa la condicion inicial, recibe un x, y devuelve
     el valor de la función evaluada'''
-    return 2 * np.exp( -x ** 2 / 0.1)
+    return 2 * np.exp(-x ** 2 / 0.1)
 
 
 def poner_condiciones_iniciales(S, N, h):
