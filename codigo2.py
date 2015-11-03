@@ -1,8 +1,8 @@
 '''
 Este script resuelve numéricamente la ecuación de Fisher-KPP, usando el metodo
 de Crank Nicolson y el de Euler explicito. La ecuacion corresponde a
-dT/dt = gamma * d2T/dx2 + mu * T - mu * T^2 , con gamma = 0.001 y mu = 1.5 y
-condiciones de borde T(t,0) = 1, T(t,1) = 0 y T(0,x) = exp(-x^2 / 0.1)
+dT/dt = gamma * d2T/dx2 + mu * T - mu * T^3 , con gamma = 0.001 y mu = 1.5 y
+condiciones de borde T(t,0) = 0, T(t,1) = 0 y T(0,x) = np.random.uniform(low=-0.3, high=0.3, size = N_steps)
 '''
 
 from __future__ import division
@@ -36,7 +36,7 @@ def calcula_alpha_y_beta(alhpa, beta, b, r, N_Steps):
     Acero = (1 + 2 * r)
     Aminus = -1 * r
     alpha[0] = 0
-    beta[0] = CB1  # viene de la condicion de borde T(t, 0) = 1
+    beta[0] = CB1  # viene de la condicion de borde T(t, 0) = 0
     for i in range(1, N_steps):
         alpha[i] = -Aplus / (Acero + Aminus*alpha[i-1])
         beta[i] = (b[i] - Aminus*beta[i-1]) / (Aminus*alpha[i-1] + Acero)
