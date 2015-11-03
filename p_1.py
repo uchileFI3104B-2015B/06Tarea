@@ -11,6 +11,7 @@ import locale
 Crank Nicolson.
 dn/dt = gamma * d2n/dx2 + mu* n - mu * n^2 '''
 
+
 def funcion_inicial(x):
     '''función que representa la condicion inicial, recibe un x, y devuelve
     el valor de la función evaluada'''
@@ -21,7 +22,7 @@ def poner_condiciones_iniciales(S, N, h):
     '''llena la fila 0 de la matriz con la condición inicial,
     retrona la nueva matriz'''
     x = np.linspace(X_IN, X_FIN, N)
-    vfuncion_inicial = np.vectorize(funcion_inicial) # vectorizar funcion
+    vfuncion_inicial = np.vectorize(funcion_inicial)  # vectorizar funcion
     fila_inicial = vfuncion_inicial(x)
     S = fila_inicial
     S[0] = BORDE_1
@@ -34,18 +35,18 @@ def calcula_b(b, N, r):
     al que se quiere calcular), para cada punto k'''
     for k in range(1, N - 1):
         b[k] = (S[k+1] * r + S[k-1] * r +
-               S[k] * (e * MU * (1 - S[k]) + 1 - 2 * r))
+                S[k] * (e * MU * (1 - S[k]) + 1 - 2 * r))
 
 
-def encontrar_alfa_beta(alfa, beta, b, r,N ):
+def encontrar_alfa_beta(alfa, beta, b, r, N):
     ''' encuentra  todos los alfas y betas para el tiempo t dado'''
-    A_mas = -1 * r
-    A_menos = -1* r
+    A_mas = - 1 * r
+    A_menos = - 1 * r
     A_0 = (1 + 2 * r)
     alfa[0] = 0                # condiciones finales para alfa y beta
     beta[0] = BORDE_1
 
-    for k in range(1, N): # iterar para llenar valores de alfa y beta
+    for k in range(1, N):  # iterar para llenar valores de alfa y beta
         alfa[k] = -1 * A_mas / (A_menos * alfa[k-1] + A_0)
         beta[k] = (b[k] - A_menos * beta[k-1]) / (A_menos * alfa[k-1] + A_0)
 
@@ -78,9 +79,11 @@ def mostar_resultado(sol):
     ax2.set_ylabel("Densidad en unidades arbitrarias")
     ax2.set_title("Densidad en el espacio para tiempo entre t=0 y t=10")
     for add in np.arange(numero_t):
-        ims.append(plt.plot(x_values, sol[add, :], color="b", label="t= " + str(add)))
-    im_ani = animation.ArtistAnimation(fig2, ims, interval=50, repeat_delay=3000,
-                                       blit=True)
+        ims.append(plt.plot(x_values, sol[add, :],
+                   color="b", label="t= " + str(add)))
+    im_ani = animation.ArtistAnimation(fig2, ims, interval=50,
+                                       repeat_delay=3000, blit=True)
+    # im_ani.save('p1.gif', writer="imagemagick", fps=10);
     plt.show()
 
 # Main

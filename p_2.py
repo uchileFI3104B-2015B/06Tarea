@@ -7,11 +7,14 @@ import matplotlib.animation as animation
 import pdb
 import locale
 
-'''Script para resolver numéricamente la ecuación de Fisher-KPP, usando
-Crank Nicolson.
+'''Script para resolver numéricamente la ecuación de Newell-Whitehead-Segel,
+usando Crank Nicolson.
 dn/dt = gamma * d2n/dx2 + mu* n - mu * n^3 '''
 
-np.random.seed(10)
+# definir la semilla a usar
+semilla = raw_input("deifnir la semilla a usar: ")
+np.random.seed(int(semilla))
+
 
 def poner_condiciones_iniciales(S, N, h):
     '''llena la fila 0 de la matriz con la condición inicial,
@@ -27,18 +30,18 @@ def calcula_b(b, N, r):
     al que se quiere calcular), para cada punto k'''
     for k in range(1, N - 1):
         b[k] = (S[k+1] * r + S[k-1] * r +
-               S[k] * (e * MU * (1 - S[k] ** 2) + 1 - 2 * r))
+                S[k] * (e * MU * (1 - S[k] ** 2) + 1 - 2 * r))
 
 
-def encontrar_alfa_beta(alfa, beta, b, r,N ):
+def encontrar_alfa_beta(alfa, beta, b, r, N):
     ''' encuentra  todos los alfas y betas para el tiempo t dado'''
     A_mas = -1 * r
-    A_menos = -1* r
+    A_menos = -1 * r
     A_0 = (1 + 2 * r)
     alfa[0] = 0                # condiciones finales para alfa y beta
     beta[0] = BORDE_1
 
-    for k in range(1, N): # iterar para llenar valores de alfa y beta
+    for k in range(1, N):  # iterar para llenar valores de alfa y beta
         alfa[k] = -1 * A_mas / (A_menos * alfa[k-1] + A_0)
         beta[k] = (b[k] - A_menos * beta[k-1]) / (A_menos * alfa[k-1] + A_0)
 
@@ -57,8 +60,9 @@ def mostar_resultado(sol):
     fig, ax = plt.subplots()
     x_values = np.linspace(X_IN, X_FIN, numero_x)
     ax.set_xlabel("X en unidades arbitrarias de espacio")
-    ax.set_ylabel("Densidad en unidades arbitrarias")
-    ax.set_title("Densidad en el espacio para tiempo entre t=0 y t=10")
+    ax.set_ylabel("N(x,t)")
+    ax.set_title("N(x,t) para tiempo entre t=0 y t=10.\
+    Semilla = "+str(semilla))
     for i in range(0, numero_t):
         ax.plot(x_values, sol[i, :], color="r")
     fig.savefig("im2.jpg")
@@ -66,12 +70,15 @@ def mostar_resultado(sol):
     fig2, ax2 = plt.subplots()
     ims = []
     ax2.set_xlabel("X en unidades arbitrarias de espacio")
-    ax2.set_ylabel("Densidad en unidades arbitrarias")
-    ax2.set_title(("Densidad en el espacio para tiempo entre t=0 y t=10."))
+    ax2.set_ylabel("N(x,t)")
+    ax2.set_title("N(x,t) para tiempo entre t=0 y t=10.\
+    Semilla = "+str(semilla))
     for add in np.arange(numero_t):
-        ims.append(plt.plot(x_values, sol[add, :], color="b", label="t= " + str(add)))
-    im_ani = animation.ArtistAnimation(fig2, ims, interval=50, repeat_delay=3000,
-                                       blit=True)
+        ims.append(plt.plot(x_values, sol[add, :],
+                   color="b", label="t= " + str(add)))
+    im_ani = animation.ArtistAnimation(fig2, ims, interval=50,
+                                       repeat_delay=3000, blit=True)
+    # im_ani.save('p2.gif', writer="imagemagick", fps=10);
     plt.show()
 
 # Main
