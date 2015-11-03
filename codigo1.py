@@ -9,6 +9,7 @@ from __future__ import division
 import numpy as np
 import matplotlib.pyplot as plt
 
+
 def inicializa_T(T, N_steps, h):
     '''
     Rellena T con las condiciones iniciales del problema.
@@ -21,12 +22,11 @@ def inicializa_T(T, N_steps, h):
     T[-1] = CB2
 
 
-
 # Con solucion Crank Nicolson y Euler explicito
 def calcula_b(b, N_steps, r):
     for j in range(1, N_steps - 1):
-        b[j] = r * T[j+1] + (1-2*r) * T[j] + r * T[j-1] + T[j] * (dt * mu - dt * mu * T[j])
-
+        b[j] = (r * T[j+1] + (1-2*r) * T[j] +
+                r * T[j-1] + T[j] * (dt * mu - dt * mu * T[j]))
 
 
 def calcula_alpha_y_beta(alhpa, beta, b, r, N_Steps):
@@ -69,7 +69,6 @@ x_inicial = 0
 x_final = 1
 # Paso espacial h
 h = (x_final - x_inicial) / (N_steps - 1)
-
 
 
 r = (gamma * dt) / (2 * h ** 2)

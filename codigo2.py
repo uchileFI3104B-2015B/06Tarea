@@ -2,7 +2,8 @@
 Este script resuelve numéricamente la ecuación de Fisher-KPP, usando el metodo
 de Crank Nicolson y el de Euler explicito. La ecuacion corresponde a
 dT/dt = gamma * d2T/dx2 + mu * T - mu * T^3 , con gamma = 0.001 y mu = 1.5 y
-condiciones de borde T(t,0) = 0, T(t,1) = 0 y T(0,x) = np.random.uniform(low=-0.3, high=0.3, size = N_steps)
+condiciones de borde T(t,0) = 0, T(t,1) = 0 y
+T(0,x) = np.random.uniform(low=-0.3, high=0.3, size = N_steps)
 '''
 
 from __future__ import division
@@ -11,24 +12,24 @@ import matplotlib.pyplot as plt
 
 np.random.seed(5)
 
+
 def inicializa_T(T, N_steps):
     '''
     Rellena T con las condiciones iniciales del problema.
     Se asegura que las condiciones en los bordes sean CB1 y CB2.
     '''
-    R = np.random.uniform(low=-0.3, high=0.3, size = N_steps)
+    R = np.random.uniform(low=-0.3, high=0.3, size=N_steps)
     for i in range(N_steps):
         T[i] = R[i]
     T[0] = CB1
     T[-1] = CB2
 
 
-
 # Con solucion Crank Nicolson y Euler explicito
 def calcula_b(b, N_steps, r):
     for j in range(1, N_steps - 1):
-        b[j] = r * T[j+1] + (1-2*r) * T[j] + r * T[j-1] + T[j] * (dt * mu - dt * mu * T[j] * T[j])
-
+        b[j] = (r * T[j+1] + (1-2*r) * T[j] + r * T[j-1] +
+                T[j] * (dt * mu - dt * mu * T[j] * T[j]))
 
 
 def calcula_alpha_y_beta(alhpa, beta, b, r, N_Steps):
@@ -73,7 +74,6 @@ x_final = 1
 h = (x_final - x_inicial) / (N_steps - 1)
 
 
-
 r = (gamma * dt) / (2 * h ** 2)
 
 
@@ -109,7 +109,7 @@ ax = fig.add_subplot(111)
 
 for i in range(0, int(N_pasos_temporales), 10):
     ax.plot(x, T_solucion[i, :])
-#ax.set_ylim(0, 1)
+
 ax.set_xlabel("Posicion en el espacio $x$ [adimensional]")
 ax.set_ylabel("Densidad de la especie $n$ [adimensional]")
 ax.set_title("Grafico de densidad versus posicion, entre t=0 y t=4")
