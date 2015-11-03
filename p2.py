@@ -57,17 +57,17 @@ def avanza_paso_temporal(n, n_next, alfa, beta, steps_x, steps_t):
 # Main
 
 # setup
-seteo = 53849
+seteo = input('Valor semilla?: ')
 np.random.seed(seteo)
 gamma = 0.001
 mu = 1.5
 ti = 0
-tf = 5
+tf = 20
 xi = 0
 xf = 1
 
 steps_t = 1000
-steps_x = 1000
+steps_x = 500
 
 dt = (tf - ti) / (steps_t - 1)
 h = (xf - xi) / (steps_x - 1)
@@ -108,11 +108,12 @@ ax = fig.add_subplot(111)
 
 for i in range(0, steps_t, tf):
     ax.plot(x, n_solucion[i, :])
-ax.set_ylim(0, 1)
+ax.set_ylim(-1, 1)
 
-plt.xlabel('x')
-plt.ylabel('n (x)')
-plt.title("Tiempo final = {tf}, Semilla = {seteo}".format(tf=tf, seteo=seteo))
+plt.xlabel('x', fontsize=14)
+plt.ylabel('n (x)', fontsize=14)
+plt.title("Tiempo final = {tf}, Semilla = {seteo}".format(tf=tf, seteo=seteo),
+          fontsize=16)
 plt.savefig("p2_tf{tf}_setrandom{seteo}.png".format(tf=tf, seteo=seteo))
 
 plt.show()

@@ -62,12 +62,12 @@ def avanza_paso_temporal(n, n_next, alfa, beta, steps_x, steps_t):
 gamma = 0.001
 mu = 1.5
 ti = 0
-tf = 100
+tf = 50
 xi = 0
 xf = 1
 
 steps_t = 10000
-steps_x = 400
+steps_x = 500
 
 dt = (tf - ti) / (steps_t - 1)
 h = (xf - xi) / (steps_x - 1)
