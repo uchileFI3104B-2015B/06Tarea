@@ -6,6 +6,7 @@ Este script es para resolver la ecuación de Fisher-KPP
 
 from __future__ import division
 import numpy as np
+from mpl_toolkits.mplot3d import Axes3D
 import matplotlib.pyplot as plt
 
 #-implementar Crank-N
@@ -47,12 +48,12 @@ def avanza_paso_temporal(N, N_next, alpha, beta, N_steps, mu=1.5):
 # Main
 # setup
 N_steps = 501
-N_pasos_temporales = 4000
+N_pasos_temporales = 400
 gamma=0.001
 #mu=1.5
 
 h = 1 / (N_steps - 1)
-dt = 0.001
+dt = 0.01
 r = (dt / 2 / h**2) * gamma
 
 N = np.zeros(N_steps)
@@ -78,7 +79,7 @@ for i in range(1, N_pasos_temporales):
 
 # Plots
 
-# ejemplo 1
+# PLOT 1
 
 x = np.linspace(0, 1, N_steps)
 
@@ -87,17 +88,45 @@ fig.clf()
 ax = fig.add_subplot(111)
 
 for i in range(0, N_pasos_temporales, 10):
-    ax.plot(x, N_solucion[i, :])
+    ax.plot(x, N_solucion[i, :],'r')
 ax.set_ylim(0, 1)
 
-# ejemplo 2
-# usar el plano x, t y plotear T en la 3a dimension
+plt.xlabel('Posicion')
+plt.ylabel('Densidad de la especie')
+plt.title("Densidad de la especie en funcion de la posicion entre t = 0 y t = 4")
+plt.savefig("Imagen_1")
+#Plot 2
+
 fig2 = plt.figure(2)
 fig2.clf()
 ax2 = fig2.add_subplot(111)
+from matplotlib.collections import LineCollection
+line_segments = LineCollection([list(zip(x, ys)) for ys in N_solucion],
+                               linewidths=(0.5, 1, 1.5, 2),
+                               linestyles='solid')
+line_segments.set_array(x)
+ax2.add_collection(line_segments)
+fig2 = plt.gcf()
+plt.sci(line_segments)
+
+plt.xlabel('Posicion')
+plt.ylabel('Densidad de la especie')
+plt.title("Densidad de la especie en funcion de la posicion entre t = 0 y t = 4")
+plt.savefig("Imagen_2")
+# PLOT 3
+# usar el plano x, t y plotear N en la 3a dimension
+
+fig3 = plt.figure(3)
+fig3.clf()
+ax3 = fig3.add_subplot(111)
 y = np.arange(0, N_pasos_temporales) * dt
 X, Y = np.meshgrid(x, y)
-ax2.pcolormesh(X, Y, N_solucion)
+ax3.pcolormesh(X, Y, N_solucion)
 
+
+plt.xlabel('Posicion')
+plt.ylabel('Tiempo')
+plt.title("Plano distancia-tiempo con densidad en la tercera dimension")
+plt.savefig("Imagen_3")
 plt.show()
 plt.draw()
