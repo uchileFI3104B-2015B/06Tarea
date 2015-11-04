@@ -1,0 +1,73 @@
+\documentclass[prl,showpacs, onecolumn]{revtex4-1}
+\usepackage{graphicx,amssymb,color}
+\usepackage[dvipsnames]{xcolor}
+%\usepackage[utf8]{inputenc}
+\usepackage[spanish]{babel}
+\usepackage{pgfgantt}
+
+
+\begin{document}
+\title{FI3104 M\'etodos N\'umericos para la Ciencia e Ingenieria\\ Tarea 6}
+\author{Camila Sandivari}
+\affiliation{Profesor: Valentino Gonzalez \\ Profesor Auxiliar: Felipe Pesce}
+\date{\today}
+
+\begin{abstract}
+El presente reporte muestra la resolución de la ecuación de Fisher-KPP, de reacción y difusión. Para lograr el objetivo se debe discretizar usando métodos distintos, la parte de la reacción se resuelve con un método de Euler explícito y la parte de la difusión con Cranck-Nickolson. 
+\end{abstract}
+\maketitle
+\paragraph{Procedimiento}
+\subparagraph{Parte 1}
+Para resolver la ecuación de Fisher-KPP (1) con sus respectivas condiciones iniciales, se implementa un algoritmo que resuelve la parte de difusión con método Cranck-Nickolson y la de reacción con método Euler explícito. 
+
+\begin{equation}
+\frac{\partial n}{\partial t} = \gamma \frac{\partial^2n}{\partial x^2} + \mu n - \mu n^2
+\end{equation}
+\begin{eqnarray}
+ n(t, 0) &= 1\\ n(t, 1) &= 0\\ n(0, x) &= e^{-x^2/0.1} 
+\end{eqnarray}
+
+Con $n(x,t)$ la densidad de la especie en tiempo , $\mu n$ la tendencia de la especie a crecer indefinidamente, $-\mu n^{2}$ el factor competencia debido al aumento de densidad de población, y $\gamma \nabla n$ la tendencia de la especie a dispersarse para encontrar más recursos.\\
+Los métodos de resolución se obtienen de resolver la ecuación (2) mediante discretizar de la forma mostrada en (3). Cuando el parámetro a es igual a 0 se tiene el método de Euler explícito que resuelve la parte de reacción del problema, y cuando a igual a 1 se conoce como método Cranck-Nickolson y resuelve la parte de difusión del problema.
+\begin{center}
+\begin{equation}
+\frac{\partial T}{\partial t} = \frac{\partial^2 T}{\partial x^2}
+\end{equation}
+\end{center}
+\begin{equation}
+\frac{T^{n+1}_{k} - T^{n}_{k}}{\epsilon} =\\
+ \frac{a}{2} \left[ \frac{T^{n+1}_{k+1} - 2T^{n+1}_{k}+T^{n+1}_{k-1}}{h^{2}}\right] +  \frac{2-a}{2} \left[ \frac{T^{n}_{k+1} - 2T^{n}_{k}+T^{n}_{k-1}}{h^{2}}\right]
+\end{equation}
+
+El algoritmo implementado busca resolver ecuaciones parabólicas lineales, asumiendo que son de la forma $A\overrightarrow{\varphi}=\overrightarrow{b}$ y buscando los parámetros que la ajustan a los casos particulares de cada problema a resolver.
+
+\subparagraph{Parte 2}
+El problema dos es análogo al anterior pero se busca resolver el siguiente sistema:
+
+\begin{equation}
+\frac{\partial n}{\partial t} = \gamma \frac{\partial^2n}{\partial x^2} + \mu ( n - n^3)
+\end{equation}
+\begin{eqnarray}
+n(t, 0) &= 0\\ n(t, 1) &= 0\\ n(0, x) &= \texttt{np.random.uniform(low=-0.3, high=0.3, size=Nx)}
+\end{eqnarray}
+
+\paragraph{Resultados}
+\subparagraph{Parte 1}
+
+Se obtienen los gr\'aficos para el espacio de fase en la figura 1, y la trayectoria en la figura 2, del oscilador de Van der Pool
+
+
+
+
+
+
+\subparagraph{Parte 2 }
+
+Se obtiene para la soluci\'on del atractor de Lorenz, un gr\'afico utilizando las condiciones iniciales $[1,1,1]$ para las posiciones $[x,y,z]$
+
+\newpage
+\paragraph{Conclusiones}
+El m\'etodo Runge-Kutta tanto en la versi\'on implementada como la existente en librer\'ias nos permite abordar problemas de integraci\'on bastante complejos y observar o visualizar el comportamiento de sistemas en este caso ca\'oticos que pueden ser de inter\'es.
+Se obtienen resultados que coinciden con los resultados obtenidos hist\'oricamente en la resoluci\'on de estos sistemas.
+
+\end{document}
