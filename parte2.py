@@ -37,7 +37,7 @@ dx = x_range / len(x)
 gamma = 0.001
 mu = 1.5
 s = gamma / dx**2
-dt = 0.01
+dt = 0.002
 valor_izq = 0.0
 valor_der = 0.0
 
@@ -57,8 +57,7 @@ theta[-1] = 0.0
 theta_matrix = dia_matrix((theta, 0), shape=(len(x), len(x))).tocsc()
 theta_matrix_1m = dia_matrix((1-theta, 0), shape=(len(x), len(x))).tocsc()
 
-
-STEPS = 500
+STEPS = 2500
 PLOTS = 5
 fig = plt.figure(1)
 fig.clf()
@@ -98,7 +97,7 @@ for i in range(0, STEPS+1):
 plt.subplots_adjust(left=None, bottom=None, right=0.8, top=None,
                     wspace=None, hspace=None)
 
-plt.title("Con dt=%g." % dt)
+plt.title("seed=18769, dt=%g." % dt)
 plt.xlabel("x")
 plt.ylabel("n(x)")
 plt.savefig("figura2.png")

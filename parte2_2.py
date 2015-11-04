@@ -1,13 +1,3 @@
-'''Este script resuelve la ecuacion de Fisher (parabolica no lineal) utilizando
-metodo de Crank-Nicolson para la parte de difusion y metodo explicito
-para la parte de reaccion, usando "time stepping".
-La ecuacion es de la forma: n_t= gamma n_xx + mu n (1-n). Donde n=n(t,x).
-Se usa gamma=0.001 y mu=1.5.
-Utiliza condiciones de borde u(t,0)=1, u(t,1)=0 y condicion inicial
-u(0,x)=exp(-x^2 / 0.1). Se resuelte para un tiempo entre 0 y 1, con dt=0.01
-y se escoge realizar solo 6 plots para obtener una mejor imagen.
-'''
-
 from __future__ import division
 from scipy.sparse.linalg import spsolve
 import numpy as np
@@ -15,10 +5,6 @@ import matplotlib.pyplot as plt
 from scipy.integrate import simps
 from scipy.sparse import (spdiags, coo_matrix, csc_matrix,
                           dia_matrix, dok_matrix, identity)
-
-
-def solucion_inicial(x, t=0):
-    return np.exp(-x**2 / 0.1)
 
 
 def M(x):
@@ -39,6 +25,11 @@ def Imod(x):
     return Imod.tocsc()
 
 
+def solucion_inicial(x, t=0):
+    np.random.seed(1876)
+    return np.random.uniform(low=-0.3, high=0.3, size=len(x))
+
+
 # Coeficientes y constantes
 x = np.linspace(0, 1, 500)
 x_range = (np.max(x) - np.min(x))
@@ -47,10 +38,10 @@ gamma = 0.001
 mu = 1.5
 s = gamma / dx**2
 dt = 0.002
-valor_izq = 1.0
+valor_izq = 0.0
 valor_der = 0.0
 
-# Estado inicial
+# Estado inicial de u
 n_inicial = np.matrix(solucion_inicial(x)).reshape((len(x), 1))
 n_inicial[0, 0] = valor_izq
 n_inicial[-1, -1] = valor_der
@@ -74,21 +65,21 @@ ax = plt.subplot(111)
 
 
 for i in range(0, STEPS+1):
-    # como si creara una sola lista larga
+    # crea una sola lista larga
     n_array = np.asarray(n).flatten()
 
     # reaccion (parte no lineal, calculada siempre)
-    r = np.matrix(mu*n_array*(1.0 - n_array)).reshape((len(x), 1))
+    r = np.matrix(mu*n_array*(1.0 - n_array**2)).reshape((len(x), 1))
 
     if i % abs(STEPS/PLOTS) == 0:
         plot_num = abs(i/(STEPS/PLOTS))
         completado = plot_num / PLOTS
         print "fraccion completada", completado
         print "I: %g" % (simps(n_array, dx=dx), )
-        ax.plot(x, n_array, "o", color=plt.cm.Accent(completado))
         ax.plot(x, n_array, "-o", color=plt.cm.Accent(completado),
                 label="t="+str(int(i*dt)))
         ax.legend(loc='center left', bbox_to_anchor=(1., 0.5))
+
     # Matriz A
     A = (I - dt*s*theta_matrix*M)
 
@@ -99,15 +90,16 @@ for i in range(0, STEPS+1):
     b[0, 0] = valor_izq
     b[-1, -1] = valor_der
 
-    # se revuelve An=b
-    n = spsolve(A, b)                       # Devuelve un np.array
-    n = np.matrix(n).reshape((len(x), 1))   # necesitamos un vector columna
+    # Se resuelve An=b
+    n = spsolve(A, b)                       # Returns an numpy array,
+    n = np.matrix(n).reshape((len(x), 1))   # need a column matrix
 
-plt.subplots_adjust(left=None, bottom=None, right=0.8,
-                    top=None, wspace=None, hspace=None)
-plt.title("dt=%g." % dt)
+plt.subplots_adjust(left=None, bottom=None, right=0.8, top=None,
+                    wspace=None, hspace=None)
+
+plt.title("seed=1876, dt=%g." % dt)
 plt.xlabel("x")
 plt.ylabel("n(x)")
-plt.savefig("figura1.png")
+plt.savefig("figura3.png")
 plt.show()
 plt.draw()
