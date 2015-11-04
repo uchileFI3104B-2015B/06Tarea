@@ -44,3 +44,21 @@ def avanza_paso_temporal(T, T_next, alpha, beta, N_steps):
     for i in range(N_steps - 2, 0, -1):
         T_next[i] = alpha[i] * T_next[i+1] + beta[i]
     # T = T_next.copy() # Esto no funciona, hacerlo fuera de la funcion
+
+
+# Main
+
+# setup
+gamma = 0.001
+mu = 1.5
+t_inicial = 0
+t_final = 45
+x_inicial = 0
+x_final = 1
+
+N_steps = 500
+N_pasos_temporales = 1000
+
+dt = (t_final - t_inicial) / (N_pasos_temporales - 1)
+h = (x_final - x_inicial) / (N_steps-1)
+r = (dt / (2 * h**2))*gamma
