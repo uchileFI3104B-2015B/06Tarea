@@ -72,7 +72,7 @@ steps_x = 500
 dt = (tf - ti) / (steps_t - 1)
 h = (xf - xi) / (steps_x - 1)
 
-# dt = h**2 / 2 # Este es el máximo teórico para el metodo explicito
+#dt = h**2 / 2 # Este es el máximo teórico para el metodo explicito
 # Máximo teórico no funciona
 
 r = dt / (2 * h**2)
