@@ -2,6 +2,15 @@ from __future__ import division
 import numpy as np
 import matplotlib.pyplot as plt
 
+'''
+Este script resuelve numericamente la ecuacion de Fisher-KPP, usando el metodo
+de Crank Nicolson y el de Euler explicito. La ecuacion corresponde a
+dn/dt = gamma * d2T/dx2 + mu * T - mu * T^2 , con gamma = 0.001 y mu = 1.5 y
+y las condiciones de borde n(t,0) = 1, n(t,1) = 0 y n(0,x)= exp(-x^2 / 0.1)
+'''
+
+
+
 
 def inicializa_n(n, N_steps, h):
     '''
@@ -10,7 +19,7 @@ def inicializa_n(n, N_steps, h):
     '''
     for i in range(N_steps):
         x = i * h
-        n[i] = np.exp(- x ** 2 / 0.1)
+        n[i] = np.exp(- x ** 2 / 0.1)  #si se cambia funcion inicial, 10, 20,50, se desplaza la densidad a los lados.
     n[0] = borde1
     n[-1] = borde2
 
@@ -40,8 +49,8 @@ def avanza_paso_temporal(n, n_next, alpha, beta, N_steps):
 
 # Main
 # setup
-mu=1.5
-gamma=0.001
+mu=1.5  #interesante mu=0
+gamma=0.00  #interesante gamma=0, se va mas rapido a n=1
 N_steps = 500
 t_inicial=0
 t_final=10
@@ -84,12 +93,12 @@ fig.clf()
 ax = fig.add_subplot(111)
 
 for i in range(0, int(N_pasos_temporales), 10):
-    ax.plot(x, n_solucion[i, :])
+    ax.plot(x, n_solucion[i, :],'g')
 ax.set_ylim(0, 1)
 ax.set_title('Grafico n v/s x')
 ax.set_xlabel('x [unidades arbitrarias]')
 ax.set_ylabel('n [unidades arbitrarias]')
-plt.savefig('figurap1.png')
+plt.savefig('figurap1gamma0.png')
 
 
 plt.show()

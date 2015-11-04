@@ -2,7 +2,16 @@ from __future__ import division
 import numpy as np
 import matplotlib.pyplot as plt
 
-np.random.seed(347)
+'''
+
+ Este script resuelve numericamente la ecuacion diferencial de newell-whitehead-segel usando el metodo
+ de Crank Nicolson y el de Euler explicito. La ecuacion corresponde a
+ dn/dt = gamma * d2n/dx2 + mu * n - mu * n^3 , con gamma = 0.001 y mu = 1.5 y
+ y las condiciones de borde n(t,0) = 0, n(t,1) = 0 y n(0,x) = np.random.uniform(low=-0.3, high=0.3, size = N_steps)
+
+'''
+
+np.random.seed(340)   # al cambiar condicion inicial cambia la forma de la funcion. ej: 340,15,67
 
 
 def inicializa_n(n, N_steps, h):
@@ -19,7 +28,7 @@ def inicializa_n(n, N_steps, h):
 
 def calcula_b(b, N_steps, r):
     for j in range(1, N_steps - 1):
-        b[j] = r * n[j+1] + (1-2*r) * n[j] + r * n[j-1] + n[j] * (dt * mu - dt * mu * n[j] * n[j])
+        b[j] = r * n[j+1] + (1-2*r) * n[j] + r * n[j-1] + n[j] * (dt * mu - dt * mu * n[j] * n[j])  #euler explicito mas cranck-nicolson.
 
 
 
@@ -28,7 +37,7 @@ def calcula_alpha_y_beta(alhpa, beta, b, r, N_Steps):
     Acero = (1 + 2 * r)
     Aminus = -1 * r
     alpha[0] = 0
-    beta[0] = borde1   # condicion de borde n(t, 0) = 0
+    beta[0] = borde1   # condicion de borde n(t, 0)
     for i in range(1, N_steps):
         alpha[i] = -Aplus / (Acero + Aminus*alpha[i-1])
         beta[i] = (b[i] - Aminus*beta[i-1]) / (Aminus*alpha[i-1] + Acero)
@@ -42,8 +51,8 @@ def avanza_paso_temporal(n, n_next, alpha, beta, N_steps):
 
 # Main
 # setup
-mu=1.5
-gamma=0.001
+mu=0#interesante caso solo difusion mu=0
+gamma=0.001 #interesante caso gamma=0
 N_steps = 500
 t_inicial=0
 t_final=10
@@ -59,7 +68,6 @@ x_inicial=0
 x_final=1
 
 h = (x_final-x_inicial) / (N_steps - 1)
-# dt = h**2 / 2 # Este es el maximo teorico para el metodo explicito
 r = (gamma*dt) /( 2* h**2)
 
 n = np.zeros(N_steps)
@@ -93,12 +101,12 @@ fig.clf()
 ax = fig.add_subplot(111)
 
 for i in range(0, int(N_pasos_temporales), 10):
-    ax.plot(x, n_solucion[i, :])   # se grafican las soluciones en funcion de x dadas por los tiempos del range entre -1.5 y 1.5
+    ax.plot(x, n_solucion[i, :],'r')   # se grafican las soluciones en funcion de x dadas por los tiempos del range entre -1.5 y 1.5
 ax.set_ylim(-1.5, 1.5)
 ax.set_title('Grafico n v/s x')
 ax.set_xlabel('x [unidades arbitrarias]')
 ax.set_ylabel('n [unidades arbitrarias]')
-plt.savefig('figurap2.png')
+plt.savefig('figurap2seed340mu0.png')
 
 
 plt.show()
