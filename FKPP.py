@@ -33,10 +33,20 @@ def calcular_alpha_y_beta(alpha, beta, b, r):
     Acero = (1 + 2 * r)
     Amenos = -1 * r
     alpha[0] = 0
-    beta[0] = 1  # viene de la condicion de borde n(t, 0) = 1
+    beta[0] = 1  # debido a que condicion de borde n(t, 0) = 1
     for i in range(1, len(b)):
         alpha[i] = -Amas / (Acero + Amenos*alpha[i-1])
         beta[i] = (b[i] - Amenos*beta[i-1]) / (Amenos*alpha[i-1] + Acero)
+        
+def avance_tiempo(n, n_sig, alpha, beta):
+    '''
+    Avanza un paso temporal en la solución.
+    '''
+    n_sig[0] = 1 #Condiciones de borde
+    n_sig[-1] = 0
+    for i in range(len(n) - 2, 0, -1):
+        n_sig[i] = alpha[i] * n_sig[i+1] + beta[i]
+    pass
 
 #Main
 
