@@ -1,11 +1,12 @@
-'''Este script resuelve la ecuacion de Fisher (parabolica no lineal) utilizando
+'''
+Este script resuelve la ecuacion de Fisher (parabolica no lineal) utilizando
 metodo de Crank-Nicolson para la parte de difusion y metodo explicito
 para la parte de reaccion, usando "time stepping".
 La ecuacion es de la forma: n_t= gamma n_xx + mu n (1-n). Donde n=n(t,x).
 Se usa gamma=0.001 y mu=1.5.
 Utiliza condiciones de borde u(t,0)=1, u(t,1)=0 y condicion inicial
-u(0,x)=exp(-x^2 / 0.1). Se resuelte para un tiempo entre 0 y 1, con dt=0.01
-y se escoge realizar solo 6 plots para obtener una mejor imagen.
+u(0,x)=exp(-x^2 / 0.1). Se resuelve para un tiempo entre 0 y 1, con dt=0.002
+y dx=0.002 se escoge realizar solo 6 plots para obtener una mejor imagen.
 '''
 
 from __future__ import division

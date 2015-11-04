@@ -1,3 +1,16 @@
+'''
+Este script resuelve la ecuacion de Newell-Whitehead-Segel
+(parabolica no lineal) utilizando metodo de Crank-Nicolson para la parte de
+difusion y metodo explicito para la parte de reaccion, usando "time stepping".
+La ecuacion es de la forma: n_t= gamma n_xx + mu n (1-n^2). Donde n=n(t,x).
+Se usa gamma=0.001 y mu=1.5.
+Utiliza condiciones de borde u(t,0)=0, u(t,1)=0 y condicion inicial
+u(0,x)=np.random.uniform(low=-0.3, high=0.3, size=Nx).
+Se resuelve para un tiempo entre 0 y 1, con dt=0.002 y dx=0.002
+y se escoge realizar solo 6 plots para obtener una mejor imagen.
+Utiliza seed=18769.
+'''
+
 from __future__ import division
 from scipy.sparse.linalg import spsolve
 import numpy as np
