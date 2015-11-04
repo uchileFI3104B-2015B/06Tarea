@@ -22,9 +22,9 @@ def inicializa_N(N, N_steps, h):
     N[-1] = 0
 
 
-def calcula_b(b, N_steps, r):
+def calcula_b(b, N_steps, r, mu=1.5):
     for j in range(1, N_steps - 1):
-        b[j] = r * N[j+1] + (1-2*r) * N[j] + r * N[j-1]
+        b[j] = r * N[j+1] + (1-2*r) * N[j] + r * N[j-1] + dt*mu*(N[j]-(N[j])**2)
 
 
 def calcula_alpha_y_beta(alhpa, beta, b, r, N_Steps):
@@ -42,35 +42,27 @@ def avanza_paso_temporal(N, N_next, alpha, beta, N_steps, mu=1.5):
     N_next[0] = 1
     N_next[-1] = 0
     for i in range(N_steps - 2, 0, -1):
-        N_next_Euler[i] = N[i] + dt*mu*(N[i]-(N[i])**2) #Euler
-        N_next[i] = alpha[i] * N_next[i+1] + beta[i] # Crank-N
-    N_next = N_next + N_next_Euler
-#-implementar Euler explícito
-#-Main, Condiciones iniciales, condiciones de bordes, busca y guarda las soluciones en cada paso, plotea
+        N_next[i] =alpha[i] * N_next[i+1] + beta[i]  # Crank-N
 
 # Main
-
 # setup
 N_steps = 501
-N_pasos_temporales = 400
+N_pasos_temporales = 4000
 gamma=0.001
 #mu=1.5
 
 h = 1 / (N_steps - 1)
-# dt = h**2 / 2 # Este es el máximo teórico para el metodo explicito
-dt = 0.01
+dt = 0.001
 r = (dt / 2 / h**2) * gamma
 
 N = np.zeros(N_steps)
 N_next = np.zeros(N_steps)
-N_next_Euler = np.zeros(N_steps)
 
 b = np.zeros(N_steps)
 alpha = np.zeros(N_steps)
 beta = np.zeros(N_steps)
 
 inicializa_N(N, N_steps, h)
-
 
 # Queremos guardar las soluciones en cada paso
 N_solucion = np.zeros((N_pasos_temporales, N_steps))
