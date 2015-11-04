@@ -83,3 +83,23 @@ for i in range(1, N_pasos_temporales):
     avanza_paso_temporal(T, T_next, alpha, beta, N_steps)
     T = T_next.copy()
     T_solucion[i, :] = T.copy()
+
+
+# Plots
+
+# ejemplo 1
+
+x = np.linspace(0, 1, N_steps)
+
+fig = plt.figure(1)
+fig.clf()
+ax = fig.add_subplot(111)
+
+for i in range(0, N_pasos_temporales, 10):
+    ax.plot(x, T_solucion[i, :])
+ax.set_ylim(0, 1)
+ax.set_xlabel('$\ x $', fontsize=15)
+ax.set_ylabel('$\ n $', fontsize=15)
+ax.set_title('$\ Densidad \ en \ el \ espacio \ con \ tfinal = 45$', fontsize=13)
+
+plt.show()
