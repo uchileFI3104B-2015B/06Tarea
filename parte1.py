@@ -4,7 +4,9 @@
 '''
 Este script resuelve un problema simple de diffusion en 1D.
 La ecuación a resover es:
-    dn/dt = gama * d2n/dx2 + un - un^2; n(0,x) = np.exp(-x**2/0.1); n(t, 0) = 1 n(t, 1) = 0
+    dn/dt = gama * d2n/dx2 + un - un^2;
+    n(0,x) = np.exp(-x**2/0.1);
+    n(t, 0) = 1 n(t, 1) = 0
 '''
 
 from __future__ import division
@@ -103,6 +105,7 @@ for i in range(0, N_pasos_temporales, 10):
 ax.set_ylim(0, 1)
 ax.set_xlabel('$\ x $', fontsize=15)
 ax.set_ylabel('$\ n $', fontsize=15)
-ax.set_title('$\ Densidad \ en \ el \ espacio \ con \ tfinal = 45$', fontsize=13)
+ax.set_title('$\ Densidad \ en \ el \ espacio \ con \ tfinal = 45$',
+             fontsize=13)
 plt.grid(True)
 plt.show()
