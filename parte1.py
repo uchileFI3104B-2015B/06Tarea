@@ -15,6 +15,36 @@ import matplotlib.pyplot as plt
 # funciones base
 
 
+def cond_ini(x):
+    '''
+    establece las condiciones iniciales del problema
+    '''
+    pass
+
+
+def calc_b(b, M, r):
+    '''
+    calcula el valor de b para el metodo de crank nicolson
+    '''
+    for j in range(1, M - 1):
+        b[j] = r * n[]
+    pass
+
+
+def calc_alpha_beta(alpha, beta, b, r, M):
+    '''
+    obtiene los valores de alpha y beta para el metodo de crank nicolson
+    '''
+    pass
+
+
+def avanza_tiempo(n, n_sig, alpha, beta, M):
+    '''
+    obtiene el comportamiento de la funcion al tiempo siguiente
+    '''
+    pass
+
+
 
 # main
 # inicializacion
