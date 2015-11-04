@@ -15,10 +15,13 @@ import matplotlib.pyplot as plt
 # funciones base
 
 
-def cond_ini(x):
+def cond_ini(n, M, h):
     '''
     establece las condiciones iniciales del problema
     '''
+    for i in range(N):
+        x = i * h
+        n[i] = np.exp(- (x ** 2) / 0.1)
     pass
 
 
@@ -27,7 +30,7 @@ def calc_b(b, M, r):
     calcula el valor de b para el metodo de crank nicolson
     '''
     for j in range(1, M - 1):
-        b[j] = r * n[]
+        b[j] = r * n[j+1] + (1 - 2 * r) * T[j] +  r * T[j-1]
     pass
 
 
@@ -35,6 +38,14 @@ def calc_alpha_beta(alpha, beta, b, r, M):
     '''
     obtiene los valores de alpha y beta para el metodo de crank nicolson
     '''
+    Amas = - 1 * r
+    Acero = (1 + 2 * r)
+    Amenos = - 1 * r
+    alpha[0] = 0
+    beta[0] = 1  # condiciones iniciales
+    for i in range(1, M):
+        alpha[i] = - Amenos / (Acero + Amenos * alpha[i-1])
+        beta[i] = (b[i] - Amenos * beta[i-1]) / (Amenos * alpha[i-1] + Acero)
     pass
 
 
@@ -42,6 +53,10 @@ def avanza_tiempo(n, n_sig, alpha, beta, M):
     '''
     obtiene el comportamiento de la funcion al tiempo siguiente
     '''
+    T_sig[0] = 1  # condiciones iniciales
+    T_sig[-1] = 0
+    for i in range(M - 2, 0, -1):
+        T_sig[i] = alpha[i] * T_sig[i+1] + beta[i]
     pass
 
 
