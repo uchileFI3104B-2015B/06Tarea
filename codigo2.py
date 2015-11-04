@@ -1,11 +1,15 @@
 '''
-Este script...
+Este script resuelve la ecuacion de Newell-Whitehead-Segel dada por:
+dT/dt = gamma * d2T/dx2 + mu * (T - T^3) (gamma = 0.001, mu = 1.5 )
+usando el metodo de Crank-Nicolson y Euler explicito con las condiciones de
+borde T(t,0) = 0, T(t,1) = 0 y T(0,x) = np.random-uniform(low=-0.3, high=0.3,
+size=Nx)
 '''
 from __future__ import division
 import numpy as np
 import matplotlib.pyplot as plt
 
-np.random.seed(3)
+np.random.seed(500)
 
 
 def inicializa_T(T, N_steps, h):
@@ -88,11 +92,11 @@ ax = fig.add_subplot(111)
 for i in range(0, int(N_pasos_temporales), 90):
     ax.plot(x, T_solucion[i, :], label="t="+str(i*e))
 
-ax.set_xlabel("Posicion en el espacio x")
-ax.set_ylabel("Densidad de la especie n")
-ax.set_title("Grafico de densidad versus posicion para distintos tiempos")
+ax.set_xlabel("x")
+ax.set_ylabel("n(x,t)")
+ax.set_title("n(x,t) vs x para distintos valores de t")
 plt.legend(loc='lower left')
 
-fig.savefig("graf_2_seed_3.png")
+fig.savefig("graf_2_seed_500.png")
 plt.show()
 plt.draw()
