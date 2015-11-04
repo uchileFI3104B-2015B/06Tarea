@@ -48,7 +48,7 @@ def avanza_paso_temporal(N, N_next, alpha, beta, N_steps, mu=1.5):
 # Main
 # setup
 N_steps = 501
-N_pasos_temporales = 400
+N_pasos_temporales = 1000
 gamma=0.001
 #mu=1.5
 
@@ -93,7 +93,7 @@ ax.set_ylim(0, 1)
 
 plt.xlabel('Posicion')
 plt.ylabel('Densidad de la especie')
-plt.title("Densidad de la especie en funcion de la posicion entre t = 0 y t = 4")
+plt.title("Densidad de la especie en funcion de la posicion entre t = 0 y t = 10")
 plt.savefig("Imagen_1")
 #Plot 2
 
@@ -111,7 +111,7 @@ plt.sci(line_segments)
 
 plt.xlabel('Posicion')
 plt.ylabel('Densidad de la especie')
-plt.title("Densidad de la especie en funcion de la posicion entre t = 0 y t = 4")
+plt.title("Densidad de la especie en funcion de la posicion entre t = 0 y t = 10")
 plt.savefig("Imagen_2")
 # PLOT 3
 # usar el plano x, t y plotear N en la 3a dimension

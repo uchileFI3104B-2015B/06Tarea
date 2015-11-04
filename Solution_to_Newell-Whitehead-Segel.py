@@ -9,8 +9,7 @@ import numpy as np
 from mpl_toolkits.mplot3d import Axes3D
 import matplotlib.pyplot as plt
 
-np.random.seed(10)
-#-implementar Crank-N
+np.random.seed(555)
 
 def inicializa_N(N, N_steps, h):
     '''
@@ -18,7 +17,7 @@ def inicializa_N(N, N_steps, h):
     Se asegura que las condiciones en los bordes sean uno y cero.
     '''
     N = np.random.uniform(low=-0.3, high=0.3, size=N_steps)
-    print N[0], N[1],N[2]
+
     N[0] = 1
     N[-1] = 0
     return N
@@ -64,7 +63,7 @@ alpha = np.zeros(N_steps)
 beta = np.zeros(N_steps)
 
 N = inicializa_N(N, N_steps, h)
-print N[0],N[1],N[2]
+
 # Queremos guardar las soluciones en cada paso
 N_solucion = np.zeros((N_pasos_temporales, N_steps))
 N_solucion[0, :] = N.copy()
@@ -92,9 +91,9 @@ for i in range(0, N_pasos_temporales, 10):
 #ax.set_ylim(0, 1)
 
 plt.xlabel('Posicion')
-plt.ylabel('Densidad de la especie')
-plt.title("Densidad de la especie en funcion de la posicion entre t = 0 y t = 4")
-plt.savefig("Imagen_1")
+plt.ylabel(r'$n(x,t)$')
+plt.title(r"$n$ en funcion de la posicion entre t = 0 y t = 10")
+plt.savefig("2imagen_1")
 #Plot 2
 
 fig2 = plt.figure(2)
@@ -110,9 +109,11 @@ fig2 = plt.gcf()
 plt.sci(line_segments)
 
 plt.xlabel('Posicion')
-plt.ylabel('Densidad de la especie')
-plt.title("Densidad de la especie en funcion de la posicion entre t = 0 y t = 4")
-plt.savefig("Imagen_2")
+plt.ylabel(r'$n(x,t)$')
+plt.title(r"$n$ en funcion de la posicion entre t = 0 y t = 10")
+plt.ylim(-1,1)
+plt.savefig("2imagen_2")
+
 # PLOT 3
 # usar el plano x, t y plotear N en la 3a dimension
 
@@ -126,7 +127,7 @@ ax3.pcolormesh(X, Y, N_solucion)
 
 plt.xlabel('Posicion')
 plt.ylabel('Tiempo')
-plt.title("Plano distancia-tiempo con densidad en la tercera dimension")
-plt.savefig("Imagen_3")
+plt.title(r"Plano Posicion-Tiempo con $n(x,t)$ en la tercera dimension")
+plt.savefig("2imagen_3")
 plt.show()
 plt.draw()
