@@ -51,7 +51,8 @@ def plotiar(sol):
     for i in range(0, largoT):
         ax.plot(x_values, sol[i, :], color="r")
     fig.savefig("plot1.jpg")
-    # animacion
+
+    # esta parte es una animacion que muestra el cambio en la densidad
     fig2, ax2 = plt.subplots()
     ims = []
     ax2.set_xlabel("Posicion")
