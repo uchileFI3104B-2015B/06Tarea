@@ -25,12 +25,13 @@ def cond_ini(n, M, h):
     pass
 
 
-def calc_b(b, M, r):
+def calc_b(b, M, r, h):
     '''
     calcula el valor de b para el metodo de crank nicolson
     '''
     for j in range(1, M - 1):
-        b[j] = r * n[j+1] + (1 - 2 * r) * T[j] +  r * T[j-1]
+        b[j] = r * n[j+1] + (1 - 2 * r) * n[j] +  r * n[j-1] +
+               h * n[i] * (1 - n[i])
     pass
 
 
@@ -53,10 +54,10 @@ def avanza_tiempo(n, n_sig, alpha, beta, M):
     '''
     obtiene el comportamiento de la funcion al tiempo siguiente
     '''
-    T_sig[0] = 1  # condiciones iniciales
-    T_sig[-1] = 0
+    n_sig[0] = 1  # condiciones iniciales
+    n_sig[-1] = 0
     for i in range(M - 2, 0, -1):
-        T_sig[i] = alpha[i] * T_sig[i+1] + beta[i]
+        n_sig[i] = alpha[i] * n_sig[i+1] + beta[i]
     pass
 
 
