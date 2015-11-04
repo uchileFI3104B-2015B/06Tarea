@@ -1,5 +1,13 @@
 '''
+Este script discretiza la ecuacion Fisher-KPP por
+medio del metodo de Crank Nicolson la parte de difusion
+y euler explicito la parte de reaccion
 
+dn/dt = gamma* d^2n/dx^2 + mu*n - mu*n^2
+Condiones iniciales:
+n(t,0)=1
+n(t,1)=0
+n(0,x)=exp(-x^2/0.1)
 '''
 
 from __future__ import division
@@ -17,11 +25,13 @@ def inicializa_T(T, N_steps, h):
     T[0] = 1
     T[-1] = 0
 
+#  Crank nicolson y Euler explicito
 
-#  C
+
 def calcula_b(b, N_steps, r):
     for j in range(1, N_steps - 1):
-        b[j] = r * T[j+1] + (dt * mu * (1 - T[j]) + 1 - 2 * r) * T[j] + r * T[j-1]
+        b[j] = r * T[j+1] + (dt * mu * (1 - T[j]) + 1 - 2 * r) * T[j] +\
+               r * T[j-1]
 
 
 def calcula_alpha_y_beta(alhpa, beta, b, r, N_Steps):
@@ -43,7 +53,7 @@ def avanza_paso_temporal(T, T_next, alpha, beta, N_steps):
         T_next[i] = alpha[i] * T_next[i+1] + beta[i]
 
 
-# - - - MAIN - - - #
+# - - - SETUP - - - #
 
 mu = 1.5
 gamma = 0.001

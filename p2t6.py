@@ -1,5 +1,13 @@
 '''
+Este script discretiza la ecuacion Newell-Whitehead-Segel por
+medio del metodo de Crank Nicolson la parte de difusion
+y euler explicito la parte de reaccion
 
+dn/dt = gamma* d^2n/dx^2 + mu*n - mu*n^3
+Condiones iniciales:
+n(t,0)=0
+n(t,1)=0
+n(0,x)=np.random.uniform(low=-0.3, high=0.3, size=Nx)
 '''
 
 from __future__ import division
@@ -27,7 +35,7 @@ def inicializa_T(T, N_steps, h):
 
 def calcula_b(b, N_steps, r):
     for j in range(1, N_steps - 1):
-        b[j] = r * T[j+1] + (dt * mu * (1 - T[j]**2) + 1 - 2 * r) * T[j] + \
+        b[j] = r * T[j+1] + (dt * mu * (1 - T[j]**2) + 1 - 2 * r) * T[j] +\
                r * T[j-1]
 
 
@@ -36,7 +44,7 @@ def calcula_alpha_y_beta(alhpa, beta, b, r, N_Steps):
     Acero = (1 + 2 * r)
     Aminus = -1 * r
     alpha[0] = 0
-    beta[0] = 0  # viene de la condicion de borde T(t, 0) = 1
+    beta[0] = 0  # viene de la condicion de borde T(t, 0) = 0
 
     for i in range(1, N_steps):
         alpha[i] = -Aplus / (Acero + Aminus * alpha[i-1])
@@ -50,7 +58,7 @@ def avanza_paso_temporal(T, T_next, alpha, beta, N_steps):
         T_next[i] = alpha[i] * T_next[i+1] + beta[i]
 
 
-# - - - MAIN - - - #
+# - - - SETUP - - - #
 
 mu = 1.5
 gamma = 0.001
