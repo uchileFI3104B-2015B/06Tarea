@@ -30,7 +30,7 @@ def calc_b(b, M, r, h, mu):
     calcula el valor de b para el metodo de crank nicolson
     '''
     for j in range(1, M - 1):
-        b[j] = r * n[j+1] + (1 - 2 * r) * n[j] +  r * n[j-1] + h * n[i] * mu * (1 - n[i])
+        b[j] = r * n[j+1] + (1 - 2 * r) * n[j] +  r * n[j-1] + h * mu * (n[j] - n[j] ** 2)
     pass
 
 
@@ -55,7 +55,7 @@ def avanza_tiempo(n, n_sig, alpha, beta, M):
     '''
     n_sig[0] = 1  # condiciones iniciales
     n_sig[-1] = 0
-    for i in range(M - 2, 0, -1):
+    for i in range(M - 12, 0, -1):
         n_sig[i] = alpha[i] * n_sig[i+1] + beta[i]
     pass
 
@@ -63,16 +63,18 @@ def avanza_tiempo(n, n_sig, alpha, beta, M):
 
 # main
 # inicializacion
-N_x = 500
-N_t = 100
+#N_x = 500
+#N_t = 1000
 mu = 1.5
 gamma = 0.001
-t_i = 0
-t_f = 5
-x_i = 0
-x_d = 1
-dx = (x_d - x_i) / (N_x - 1)
-dt = (t_f - t_i) / (N_t - 1)
+#dx = (x_d - x_i) / (N_x - 1)
+#dt = (t_f - t_i) / (N_t - 1)
+dx = 0.002
+dt = 0.002
+N_x = 500
+N_t = 3000
+print N_x
+print N_t
 r = (gamma * dt) / (2 * dx ** 2)
 n = np.zeros(N_x)
 n_sig = np.zeros(N_x)
@@ -84,7 +86,7 @@ n_sol = np.zeros((N_t, N_x))
 n_sol[0, :] = n.copy()
 # iteracion
 for i in range(1, N_t):
-    calc_b(b, N_x, r, dx, mu)
+    calc_b(b, N_x, r, dt, mu)
     calc_alpha_beta(alpha, beta, b, r, N_x)
     avanza_tiempo(n, n_sig, alpha, beta, N_x)
     n = n_sig.copy()
@@ -97,7 +99,7 @@ fig = plt.figure(1)
 fig.clf()
 ax = fig.add_subplot(111)
 
-for i in range(0, N_t, 10):
+for i in range(0, N_t, 100):
     ax.plot(x, n_sol[i, :])
 
 plt.show()
