@@ -4,14 +4,16 @@ import matplotlib.pyplot as plt
 
 '''
 
- Este script resuelve numericamente la ecuacion diferencial de newell-whitehead-segel usando el metodo
- de Crank Nicolson y el de Euler explicito. La ecuacion corresponde a
- dn/dt = gamma * d2n/dx2 + mu * n - mu * n^3 , con gamma = 0.001 y mu = 1.5 y
- y las condiciones de borde n(t,0) = 0, n(t,1) = 0 y n(0,x) = np.random.uniform(low=-0.3, high=0.3, size = N_steps)
+ Este script resuelve numericamente la ecuacion diferencial de
+ newell-whitehead-segel usando metodo de Crank Nicolson y de Euler explicito.
+ La ecuacion corresponde a dn/dt = gamma * d2n/dx2 + mu * n - mu * n^3 ,
+ con gamma = 0.001 y mu = 1.5 y las condiciones de borde n(t,0) = 0, n(t,1) = 0
+ y n(0,x) = np.random.uniform(low=-0.3, high=0.3, size = N_steps)
 
 '''
 
-np.random.seed(340)   # al cambiar condicion inicial cambia la forma de la funcion. ej: 340,15,67
+np.random.seed(340)
+# al cambiar condicion inicial cambia la forma de la funcion (ej: 340,15,67)
 
 
 def inicializa_n(n, N_steps, h):
@@ -19,7 +21,8 @@ def inicializa_n(n, N_steps, h):
     Rellena n con las condiciones iniciales del problema.
     Se consideran las condiciones de borde para x=0 y x=1
     '''
-    U = np.random.uniform(low=-0.3, high=0.3, size = N_steps) #crea arreglo de tamano N_steps con minimo valor low y maximo valor high
+    # crea arreglo de tamano N_steps con minimo valor low y maximo valor high
+    U = np.random.uniform(low=-0.3, high=0.3, size=N_steps)
     for i in range(N_steps):
         n[i] = U[i]
     n[0] = borde1
@@ -28,8 +31,10 @@ def inicializa_n(n, N_steps, h):
 
 def calcula_b(b, N_steps, r):
     for j in range(1, N_steps - 1):
-        b[j] = r * n[j+1] + (1-2*r) * n[j] + r * n[j-1] + n[j] * (dt * mu - dt * mu * n[j] * n[j])  #euler explicito mas cranck-nicolson.
-
+        b[j] = r * n[j+1] + (1-2*r) * n[j]
+        + r * n[j-1]
+        + n[j] * (dt * mu - dt * mu * n[j] * n[j])
+        # euler explicito mas cranck-nicolson.
 
 
 def calcula_alpha_y_beta(alhpa, beta, b, r, N_Steps):
@@ -51,24 +56,24 @@ def avanza_paso_temporal(n, n_next, alpha, beta, N_steps):
 
 # Main
 # setup
-mu=0#interesante caso solo difusion mu=0
-gamma=0.001 #interesante caso gamma=0
+mu = 0  # interesante caso solo difusion mu=0
+gamma = 0.001  # interesante caso gamma=0
 N_steps = 500
-t_inicial=0
-t_final=10
-dt=0.01
-N_pasos_temporales =((t_final - t_inicial) / dt) + 1
+t_inicial = 0
+t_final = 10
+dt = 0.01
+N_pasos_temporales = ((t_final - t_inicial)/dt) + 1
 
-#condiciones de borde p2
-borde1=0
-borde2=0
+# condiciones de borde p2
+borde1 = 0
+borde2 = 0
 
-#limites para x en p2
-x_inicial=0
-x_final=1
+# limites para x en p2
+x_inicial = 0
+x_final = 1
 
 h = (x_final-x_inicial) / (N_steps - 1)
-r = (gamma*dt) /( 2* h**2)
+r = (gamma*dt)/(2*h**2)
 
 n = np.zeros(N_steps)
 n_next = np.zeros(N_steps)
@@ -76,7 +81,8 @@ alpha = np.zeros(N_steps)
 beta = np.zeros(N_steps)
 b = np.zeros(N_steps)
 
-#inicializo n con condiciones iniciales y de borde con N_steps (pasos) de h en el espacio
+''' inicializo n con condiciones iniciales
+y de borde con N_steps (pasos) de h en el espacio'''
 inicializa_n(n, N_steps, h)
 
 # Queremos guardar las soluciones en cada paso
@@ -101,7 +107,9 @@ fig.clf()
 ax = fig.add_subplot(111)
 
 for i in range(0, int(N_pasos_temporales), 10):
-    ax.plot(x, n_solucion[i, :],'r')   # se grafican las soluciones en funcion de x dadas por los tiempos del range entre -1.5 y 1.5
+    ax.plot(x, n_solucion[i, :], 'r')
+    '''se grafican las soluciones en funcion de x dadas
+    por los tiempos del range entre -1.5 y 1.5'''
 ax.set_ylim(-1.5, 1.5)
 ax.set_title('Grafico n v/s x')
 ax.set_xlabel('x [unidades arbitrarias]')

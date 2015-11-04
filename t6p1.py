@@ -10,8 +10,6 @@ y las condiciones de borde n(t,0) = 1, n(t,1) = 0 y n(0,x)= exp(-x^2 / 0.1)
 '''
 
 
-
-
 def inicializa_n(n, N_steps, h):
     '''
     Rellena n con las condiciones iniciales t=0 del problema.
@@ -19,15 +17,17 @@ def inicializa_n(n, N_steps, h):
     '''
     for i in range(N_steps):
         x = i * h
-        n[i] = np.exp(- x ** 2 / 0.1)  #si se cambia funcion inicial, 10, 20,50, se desplaza la densidad a los lados.
+        n[i] = np.exp(- x ** 2 / 0.1)
+        '''finicial 10,20,50,desplaza la densidad a los lados'''
     n[0] = borde1
     n[-1] = borde2
 
 
 def calcula_b(b, N_steps, r):
     for j in range(1, N_steps - 1):
-        b[j] = r * n[j+1] + (1-2*r) * n[j] + r * n[j-1] + n[j] * (dt * mu - dt * mu * n[j])
-
+        b[j] = r * n[j+1] + (1-2*r) * n[j]
+        + r * n[j-1]
+        + n[j] * (dt * mu - dt * mu * n[j])
 
 
 def calcula_alpha_y_beta(alhpa, beta, b, r, N_Steps):
@@ -49,19 +49,19 @@ def avanza_paso_temporal(n, n_next, alpha, beta, N_steps):
 
 # Main
 # setup
-mu=1.5  #interesante mu=0
-gamma=0.00  #interesante gamma=0, se va mas rapido a n=1
+mu = 1.5  # interesante mu=0
+gamma = 0.00  # interesante gamma=0, se va mas rapido a n=1
 N_steps = 500
-t_inicial=0
-t_final=10
-dt=0.01
-N_pasos_temporales =((t_final - t_inicial) / dt) + 1
-borde1=1
-borde2=0
-x_inicial=0
-x_final=1
+t_inicial = 0
+t_final = 10
+dt = 0.01
+N_pasos_temporales = ((t_final - t_inicial) / dt) + 1
+borde1 = 1
+borde2 = 0
+x_inicial = 0
+x_final = 1
 h = (x_final-x_inicial) / (N_steps - 1)
-r = (gamma*dt) /( 2* h**2)
+r = (gamma*dt)/(2*h**2)
 
 n = np.zeros(N_steps)
 n_next = np.zeros(N_steps)
@@ -93,7 +93,7 @@ fig.clf()
 ax = fig.add_subplot(111)
 
 for i in range(0, int(N_pasos_temporales), 10):
-    ax.plot(x, n_solucion[i, :],'g')
+    ax.plot(x, n_solucion[i, :], 'g')
 ax.set_ylim(0, 1)
 ax.set_title('Grafico n v/s x')
 ax.set_xlabel('x [unidades arbitrarias]')
