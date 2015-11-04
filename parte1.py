@@ -64,6 +64,11 @@ def avanza_tiempo(n, n_sig, alpha, beta, M):
 
 # main
 # inicializacion
+N = 500
+N_t = 100
+mu = 1.5
+gamma = 0.001
+
 
 # iteracion
 
