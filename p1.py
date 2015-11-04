@@ -38,12 +38,12 @@ def avanza_paso_temporal(T, T_next, alpha, beta, N_steps):
     for i in range(N_steps - 2, 0, -1):
         T_next[i] = alpha[i] * T_next[i+1] + beta[i]
 
-N_steps = 499
+N_steps = 500
 N_pasos_temporales = 4000
 
 h = 1 / (N_steps - 1)
 
-dt = 0.1
+dt = 0.01
 mu=1.5
 gama=0.001
 r = dt / 2 / h**2*gama
@@ -81,7 +81,9 @@ ax = fig.add_subplot(111)
 
 for i in range(0, N_pasos_temporales, 10):
     ax.plot(x, T_solucion[i, :])
-ax.set_ylim(0, 4)
+ax.set_ylim(0, 10)
+ax.set_xlabel('$\ x $', fontsize=15)
+ax.set_ylabel('$\ n $', fontsize=15)
 
 # ejemplo 2
 # usar el plano x, t y plotear T en la 3a dimension

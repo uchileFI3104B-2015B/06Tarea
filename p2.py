@@ -82,6 +82,8 @@ ax = fig.add_subplot(111)
 for i in range(0, N_pasos_temporales, 10):
     ax.plot(x, T_solucion[i, :])
 ax.set_ylim(-1, 1)
+ax.set_xlabel('$\ x $', fontsize=15)
+ax.set_ylabel('$\ n $', fontsize=15)
 
 # ejemplo 2
 # usar el plano x, t y plotear T en la 3a dimension
