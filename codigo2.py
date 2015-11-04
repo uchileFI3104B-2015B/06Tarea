@@ -7,6 +7,7 @@ import matplotlib.pyplot as plt
 
 np.random.seed(3)
 
+
 def inicializa_T(T, N_steps, h):
     '''
     Rellena T con las condiciones iniciales del problema.
@@ -22,7 +23,7 @@ def inicializa_T(T, N_steps, h):
 
 def calcula_b(b, N_steps, r):
     for j in range(1, N_steps - 1):
-        b[j] = (T[j+1] * r  + T[j-1] * r +
+        b[j] = (T[j+1] * r + T[j-1] * r +
                 T[j] * (1 - 2 * r + mu * e * (1 - T[j] * T[j])))
 
 
@@ -52,7 +53,7 @@ mu = 1.5
 
 
 N_steps = 500
-N_pasos_temporales = ( 5 / e ) + 1
+N_pasos_temporales = (5 / e) + 1
 
 h = 1 / (N_steps - 1)
 
@@ -85,7 +86,7 @@ fig.clf()
 ax = fig.add_subplot(111)
 
 for i in range(0, int(N_pasos_temporales), 90):
-    ax.plot(x, T_solucion[i, :],label="t="+str(i*e))
+    ax.plot(x, T_solucion[i, :], label="t="+str(i*e))
 
 ax.set_xlabel("Posicion en el espacio x")
 ax.set_ylabel("Densidad de la especie n")

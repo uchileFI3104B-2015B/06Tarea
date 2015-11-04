@@ -1,6 +1,10 @@
 '''
-Este script...
+Este script resuelve la ecuacion de Fisher-KPP dada por:
+dT/dt = gamma * d2T/dx2 + mu * T - mu * T^2 (gamma = 0.001, mu = 1.5 )
+usando el metodo de Crank-Nicolson y Euler explicito con las condiciones de
+borde T(t,0) = 1, T(t,1) = 0 y T(0,x) = exp(-x^2 / 0.1)
 '''
+
 from __future__ import division
 import numpy as np
 import matplotlib.pyplot as plt
@@ -20,7 +24,7 @@ def inicializa_T(T, N_steps, h):
 
 def calcula_b(b, N_steps, r):
     for j in range(1, N_steps - 1):
-        b[j] = (T[j+1] * r  + T[j-1] * r +
+        b[j] = (T[j+1] * r + T[j-1] * r +
                 T[j] * (1 + e * mu * (1 - T[j]) - 2 * r))
 
 
@@ -50,7 +54,7 @@ mu = 1.5
 
 
 N_steps = 500
-N_pasos_temporales = ( 5 / e ) + 1
+N_pasos_temporales = (5 / e) + 1
 
 h = 1 / (N_steps - 1)
 
@@ -83,7 +87,7 @@ fig.clf()
 ax = fig.add_subplot(111)
 
 for i in range(0, int(N_pasos_temporales), 90):
-    ax.plot(x, T_solucion[i, :],label="t="+str(i*e))
+    ax.plot(x, T_solucion[i, :], label="t="+str(i*e))
 ax.set_ylim(0, 1)
 ax.set_xlabel("Posicion en el espacio x")
 ax.set_ylabel("Densidad de la especie n")
