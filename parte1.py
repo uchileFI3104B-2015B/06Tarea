@@ -62,3 +62,24 @@ N_pasos_temporales = 1000
 dt = (t_final - t_inicial) / (N_pasos_temporales - 1)
 h = (x_final - x_inicial) / (N_steps-1)
 r = (dt / (2 * h**2))*gamma
+
+# condiones iniciales
+T = np.zeros(N_steps)
+T_next = np.zeros(N_steps)
+
+b = np.zeros(N_steps)
+alpha = np.zeros(N_steps)
+beta = np.zeros(N_steps)
+
+inicializa_T(T, N_steps, h)
+
+# Queremos guardar las soluciones en cada paso
+T_solucion = np.zeros((N_pasos_temporales, N_steps))
+T_solucion[0, :] = T.copy()
+
+for i in range(1, N_pasos_temporales):
+    calcula_b(b, N_steps, r)
+    calcula_alpha_y_beta(alpha, beta, b, r, N_steps)
+    avanza_paso_temporal(T, T_next, alpha, beta, N_steps)
+    T = T_next.copy()
+    T_solucion[i, :] = T.copy()
