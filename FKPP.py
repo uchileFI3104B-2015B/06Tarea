@@ -70,3 +70,11 @@ beta = np.zeros(N_x)
 b = np.zeros(N_x)
 n_sol = np.zeros((N_t, N_x))
 n_sol[0, :] = n_t.copy()
+#Iteración
+for i in range(1, N_t):
+    calcular_b(n_t, b, r, dt)
+    calcular_alpha_y_beta(alpha, beta, b, r)
+    avance_tiempo(n_t, n_tsig, alpha, beta)
+    n = n_tsig.copy()
+    n_sol[i, :] = n.copy()
+    
