@@ -10,7 +10,7 @@ from __future__ import division
 import numpy as np
 import matplotlib.pyplot as plt
 
-np.random.seed(83819)
+np.random.seed(1)
 
 
 def inicializa_T(T, N_steps):
@@ -111,10 +111,10 @@ for i in range(0, int(N_pasos_temporales), 80):
     ax.plot(x, T_solucion[i, :],  label="t="+str(i*dt))
 
 ax.set_xlabel("Posicion en el espacio $x$ [adimensional]")
-ax.set_ylabel("Densidad de la especie $n$ [adimensional]")
+ax.set_ylabel("Densidad $n$ [adimensional]")
 ax.set_title("Grafico de densidad versus posicion, entre t=0 y t=4.8")
 plt.legend(loc='upper right')
 
-fig.savefig("p_2_seed83819.png")
+fig.savefig("p_2_seed1.png")
 plt.show()
 plt.draw()
