@@ -14,8 +14,8 @@ import matplotlib.pyplot as plt
 
 #semilla
 #np.random.seed(123)
-#np.random.seed(8)
-np.random.seed(888888888)
+np.random.seed(8)
+#np.random.seed(888888888)
 # funciones base
 '''
 def cond_ini(n, M):
@@ -108,7 +108,7 @@ plt.subplots_adjust(left=None, bottom=None, right=0.8, top=None, wspace=None,
 plt.xlabel("x")
 plt.ylabel("n(x)")
 #plt.savefig("NWS1.png") #semilla 123
-#plt.savefig("NWS2.png") #semilla 8
-plt.savefig("NSW3.png") #semilla 888888888
+plt.savefig("NWS2.png") #semilla 8
+#plt.savefig("NSW3.png") #semilla 888888888
 plt.show()
 plt.draw()
