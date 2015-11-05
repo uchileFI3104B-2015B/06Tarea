@@ -13,8 +13,9 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 #semilla
-np.random.seed(123)
-
+#np.random.seed(123)
+#np.random.seed(8)
+np.random.seed(888888888)
 # funciones base
 '''
 def cond_ini(n, M):
@@ -99,13 +100,15 @@ fig.clf()
 ax = fig.add_subplot(111)
 
 for i in range(0, N_t, 500):
-    ax.plot(x, n_sol[i, :], "h")
-    ax.plot(x, n_sol[i, :], "-h", label="t="+str(i*dt))
+    ax.plot(x, n_sol[i, :], "p")
+    ax.plot(x, n_sol[i, :], "-p", label="t="+str(i*dt))
     ax.legend(loc='center left', bbox_to_anchor=(1., 0.5))
 plt.subplots_adjust(left=None, bottom=None, right=0.8, top=None, wspace=None,
                     hspace=None)
 plt.xlabel("x")
 plt.ylabel("n(x)")
-plt.savefig("NWS.png")
+#plt.savefig("NWS1.png") #semilla 123
+#plt.savefig("NWS2.png") #semilla 8
+plt.savefig("NSW3.png") #semilla 888888888
 plt.show()
 plt.draw()
