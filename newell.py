@@ -28,11 +28,13 @@ Este codigo resuelve una EDP de la forma de la ecuacion del calor mas un
 termino adicional f(m). m es un vecto m[espacio,tiempo]
 '''
 
+np.random.seed(251093)
+
 def reaccion(m, i, n, mu):
   '''
   Devuelve la funcion de reaccion para m_i**n
   '''
-  return mu * m[i,n] * (1. - m[i,n])
+  return mu * m[i,n] * (1. - m[i,n]**2)
 
 
 def crear_m_zeros(nx, nt):
@@ -45,10 +47,10 @@ def rellenar_b(m, i, n, dt, dx, gamma, mu):
   '''
   eta = (gamma * dt) / (2. * dx**2)  
   if i == 0:
-    return eta * (m[i+1,n] - m[i,n]) + m[i,n] + dt * reaccion(m, i, n, mu)
+    return 0.
   
   elif i == (len(m[:,0]) - 1):
-    return eta * (-2. * m[i,n] + m[i-1,n]) + m[i,n] + dt * reaccion(m, i, n, mu)
+    return 0.
 
   else:
     return eta * (m[i+1,n] - 2 * m[i,n] + m[i-1,n]) + m[i,n] + dt * reaccion(m, i, n, mu)
@@ -63,11 +65,7 @@ def b_vector(m, n, dt, dx, gamma, mu):
   b = np.zeros(l)
   eta = (gamma * dt) / (2. * dx**2) 
   for i in range(l):
-    if i == 0:
-      b[i] = 1. + 2. * eta
-    else:
-      b[i] = rellenar_b(m, i, n, dt, dx, gamma, mu)
-  
+    b[i] = rellenar_b(m, i, n, dt, dx, gamma, mu)
   return b
 
 
@@ -82,14 +80,17 @@ def A_matriz(m, gamma, dt, dx):
     for j in range(l):
       if i == j:
         A[i,j] = 1. + 2. * eta
-      if j == (i - 1):
+      elif j == (i - 1):
         A[i,j] = - eta
-      if j > 1 and j == (i + 1):
+      elif j == (i + 1):
         A[i,j] = - eta
   return A      
         
 
 def un_paso(m, n, dt, dx, gamma, mu):
+  '''
+  Avanza un paso temporal
+  '''
   A = A_matriz(m, gamma, dt, dx)
   b = b_vector(m, n, dt, dx, gamma, mu)
   x = np.linalg.solve(A, b)
@@ -104,10 +105,7 @@ def un_paso(m, n, dt, dx, gamma, mu):
 
 
 def set_condicion_inicial(m):
-  l = len(m[:,0])
-  for i in range(l):
-    m[i,0] = np.exp( -10. * ( float(i + 1) / float(l) )**2 )
-    m[0,i] = 1.
+  m[:,0] = np.random.uniform(low = -0.3, high = 0.3, size = len(m[:,0]))
 
 
 def resolver(nt, nx, gamma, mu):
@@ -162,7 +160,6 @@ nt = 500
 m = resolver(nt, nx, gamma, mu)
 
 graficar1(m)
-
 graficar2(m)
 
 

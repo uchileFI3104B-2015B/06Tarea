@@ -124,12 +124,12 @@ def graficar1(m):
   '''
   Grafica la matriz V en un diagrama de tonos
   '''
-  p.imshow(np.arcsinh(np.transpose(m)) , interpolation = 'nearest')#,
+  p.imshow(np.arcsinh(np.transpose(m)) , interpolation = 'nearest')
   extent=([0., 1., 0., 4.])
   p.xlabel('$X$')
   p.ylabel('$T$')
   p.colorbar()
-  p.show()  
+  p.show()   
 
 
 def graficar2(m):
