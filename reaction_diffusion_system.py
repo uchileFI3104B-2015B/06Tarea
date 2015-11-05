@@ -11,7 +11,7 @@ class reaction_diffusion_system(object):
     _gamma = 0 # Coeficiente de difusion
 
     ''' Almacena coeficientes polinomio de reaccion '''
-    _reac_poly = [0]
+    _reac_poly = [0.0]
 
 
     def __init__(self, num_puntos):
@@ -74,6 +74,40 @@ class reaction_diffusion_system(object):
         self._gamma = gamma
 
     # END of set_gamma
+
+    def _eval_reac_poly(n):
+        ''' Evalua polinomio de reaccion '''
+        value = 0
+        grade = 0
+
+        for coef in _reac_poly:
+            value += coef * n ** grade
+            grade += 1
+
+        return value
+    # END of _eval_reac_poly
+
+    def _reac_solver(h, n):
+        ''' Entrega valor de y_n+1 a partir de h (intervalo temporal)
+        e y_n para la componente de reaccion '''
+        return n + h * _eval_reac_poly(n)
+    # END of _reac_solver
+
+    def integrate(self, start_time, stop_time, step_size):
+        ''' Resuelve el sistema desde t = start_time
+        hasta stop_time, con resolucion temporal step_size
+        Retorna nuevo arreglo con situacion en stop_time '''
+
+        n = np.copy(_n)
+        n_next = np.copy(n)
+        h = step_size
+        t = np.arange(start_time, stop_time + h, h)
+
+        for i in range(t):
+            for j in range(1, len(n) - 1):
+                n_reac = _reac_solver(h, n[j])
+
+    # END of integrate
 
 
 def make_reaction_diffusion_system(num_puntos):
