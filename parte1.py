@@ -99,8 +99,14 @@ fig = plt.figure(1)
 fig.clf()
 ax = fig.add_subplot(111)
 
-for i in range(0, N_t, 100):
-    ax.plot(x, n_sol[i, :])
-
+for i in range(0, N_t, 500):
+    ax.plot(x, n_sol[i, :], "*")
+    ax.plot(x, n_sol[i, :], "-*", label="t="+str(i*dt))
+    ax.legend(loc='center left', bbox_to_anchor=(1., 0.5))
+plt.subplots_adjust(left=None, bottom=None, right=0.8, top=None, wspace=None,
+                    hspace=None)
+plt.xlabel("x")
+plt.ylabel("n(x)")
+plt.savefig("FisherKPP.png")
 plt.show()
 plt.draw()
