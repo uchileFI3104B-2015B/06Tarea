@@ -93,7 +93,11 @@ class reaction_diffusion_system(object):
     def _reac_solver(self, h, n):
         ''' Entrega valor de y_n+1 a partir de h (intervalo temporal)
         e y_n para la componente de reaccion '''
-        return h * self._eval_reac_poly(n)
+        buff = np.copy(n)
+        for j in range(1, len(n) - 1):
+            buff[j] = h * self._eval_reac_poly(n[j])
+
+        return buff
     # END of _reac_solver
 
     def _diff_solver(self, time_step, x_step, n):
@@ -146,14 +150,14 @@ class reaction_diffusion_system(object):
         t = np.arange(start_time, stop_time + h, h)
 
         for i in range(len(t)):
-            n_diff = self._diff_solver(h, x_step, n_diff)
+            ''' Solucionar cada parte de la EDO con un
+            metodo distinto'''
+            n_diff = self._diff_solver(h, x_step, n)
+            n_reac = self._reac_solver(h, n)
 
-            for j in range(1, len(n) - 1):
-                n_reac[j] = self._reac_solver(h, n_reac[j])
-                # n[j] = n_diff[j] + n_reac[j]
-
-        for i in range(1,len(n) - 1):
-            n[i] = n_diff[i] + n_reac[i]
+            ''' Unir las dos soluciones '''
+            for j in range(1,len(n)-1):
+                n[j] = n_diff[j] + n_reac[j]
 
         return n
     # END of integrate

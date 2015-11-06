@@ -35,9 +35,9 @@ if __name__ == '__main__':
     # Set componente de reaccion
     mu = 1.5
     reac_coef = [0, mu, -mu]
-    # reac_coef = [0]
     sys_p1.set_reac_coefficients(reac_coef)
 
+    # Integrar sistema P1
     n_p1 = sys_p1.integrate(t_ini, t_fin, delta_t, delta_x)
 
     plt.plot(x_axis, sys_p1._n,'r')
