@@ -11,7 +11,7 @@ from __future__ import division
 import numpy as np
 import matplotlib.pyplot as plt
 
-def inicializa_n(n, N_steps, dx): #TO DO: definir N_steps, dx y n
+def inicializa_n(n, N_steps, dx):
     '''
     Rellena T con las condiciones iniciales del problema.
     Se asegura que las condiciones en los bordes sean cero.
@@ -29,10 +29,10 @@ def calcular_b(b, N_steps, r):
     del instante anterior.
     '''
     for j in range(1, N_steps - 1):
-        b[j] = r*n[j+1] + (1 - 2*r)*n[j] + r*n[j-1] + dt*mu*(n[j] - n[j]**2) #TO DO: definir r, mu y dt
+        b[j] = r*n[j+1] + (1 - 2*r)*n[j] + r*n[j-1] + dt*mu*(n[j] - n[j]**2)
     pass
 
-def alpha_beta(alpha, beta, b, r, N_steps): #TO DO: definir alpha y beta
+def alpha_beta(alpha, beta, b, r, N_steps):
     '''
     Calcula los valores de alpha y beta.
     '''
@@ -46,7 +46,7 @@ def alpha_beta(alpha, beta, b, r, N_steps): #TO DO: definir alpha y beta
         beta[i] = (b[i] - A_minus * beta[i-1]) / (A_minus * alpha[i-1] + A_cero)
     pass
 
-def time_step(n, n_next, alpha, beta): #TO DO: definir alpha, beta y n_next
+def time_step(n, n_next, alpha, beta):
     '''
     Avanza un instante en el tiempo.
     '''
@@ -55,3 +55,38 @@ def time_step(n, n_next, alpha, beta): #TO DO: definir alpha, beta y n_next
     for i in range(N_steps - 2, 0, -1):
         n_next[i] = alpha[i] * n_next[i+1] + beta[i]
     pass
+
+#Main
+
+#Setup
+
+x_i = 0
+x_f = 1
+t_i = 0
+t_f = 1
+N_steps = 500
+N_steps_t = 250
+dx = (x_f - x_i) / (N_steps - 1)
+dt = (t_f - t_i) / (N_steps_t - 1)
+mu = 1.5
+gamma = 0.001
+r = (gamma * dt) / (2 * dx**2)
+n = np.zeros(N_steps)
+n_next = np.zeros(N_steps)
+b = np.zeros(N_setps)
+alpha = np.zeros(N_steps)
+beta = np.zeros(N_steps)
+
+inicializa_n(n, N_steps, dx)
+
+n_sol = np.zeros((N_steps_t, N_steps))
+n_sol[0, :] = n.copy()
+
+for i in range(1, N_steps_t):
+    calcular_b(b, N_steps, r)
+    alpha_beta(alpha, beta, b, r, N_steps)
+    time_step(n, n_next, alpha, beta)
+    n = n_next.copy()
+    n_sol[i, :] = n.copy()
+
+show(n_sol) #DEFINIR ESTA FUNCIÓN
