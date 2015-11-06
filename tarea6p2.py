@@ -65,7 +65,7 @@ x_f = 1
 t_i = 0
 t_f = 4
 N_steps = 500
-N_steps_t = 250
+N_steps_t = 50
 dx = (x_f - x_i) / (N_steps - 1)
 dt = (t_f - t_i) / (N_steps_t - 1)
 mu = 1.5
@@ -97,7 +97,7 @@ ax.set_xlabel("$x$")
 ax.set_ylabel("$n$")
 for i in range(0, N_steps_t):
     ax.plot(x, n_sol[i, :], color="b")
-fig.savefig("grafico1.png")
+fig.savefig("grafico2.png")
 fig.show()
 
 fig2, ax2 = plt.subplots()
