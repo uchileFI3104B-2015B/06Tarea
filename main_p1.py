@@ -11,10 +11,12 @@ import reaction_diffusion_system as sys
 # Main driver
 if __name__ == '__main__':
 
+    ''' Definicion de parametros globales '''
     numero_puntos = 500.0
     largo = 1.0
     x_axis = np.linspace(0, 1, num = numero_puntos)
     delta_x = x_axis[1] - x_axis[0]
+    print(delta_x)
     t_ini = 0
     t_fin = 4
     delta_t = 0.001
@@ -40,6 +42,15 @@ if __name__ == '__main__':
     # Integrar sistema P1
     n_p1 = sys_p1.integrate(t_ini, t_fin, delta_t, delta_x)
 
-    plt.plot(x_axis, sys_p1._n,'r')
-    plt.plot(x_axis, n_p1)
+    plt.plot(x_axis, sys_p1._n, label ='Condicion inicial')
+    plt.plot(x_axis, n_p1, 'r', label = 'Sistema en t = 4[s]')
+
+    str_title = "Cambio en la densidad de la especie n, sistema de Fisher-KPP\n\
+                Intervalo de tiempo = 4[s]"
+    plt.title(str_title, y = 1.01)
+    plt.ylabel('Densidad n')
+    plt.xlabel('Posicion x [m]')
+    plt.grid()
+    fig_name1 = "resultados_p1.png"
+    plt.savefig(fig_name1)
     plt.show()

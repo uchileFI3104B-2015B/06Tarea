@@ -19,7 +19,7 @@ if __name__ == '__main__':
     delta_x = x_axis[1] - x_axis[0]
     t_ini = 0
     t_fin = 4
-    delta_t = 0.001
+    delta_t = 0.0005
 
     ''' Crear sistema P2 '''
     sys_p2 = sys.make_reaction_diffusion_system(numero_puntos)

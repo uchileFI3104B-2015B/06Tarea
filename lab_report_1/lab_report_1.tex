@@ -43,7 +43,7 @@
 %	DOCUMENT INFORMATION
 %----------------------------------------------------------------------------------------
 
-\title{M\'etodos num\'ericos para la Ciencia e Ingenier\'ia \\ Tarea 5: Integraci\'on de Ecuación de Poisson 2D} % Title
+\title{M\'etodos num\'ericos para la Ciencia e Ingenier\'ia \\ Tarea 6: Ecuación de reacción-difusión} % Title
 
 \author{Felipe Toledo Bittner} % Author name
 
@@ -59,101 +59,100 @@
 
 \section{Introducción}
 
-En electrostática la Ecuación de Poisson (\ref{eq:eq_poisson}) describe el potencial eléctrico $V$ a partir de la distribución espacial de carga libre $\rho$ en el sistema, con $\epsilon$ una constante del medio físico:
+Los sistemas de reacción-difusión se utilizan para modelar matemáticamente fenómenos espaciales en que el valor de una variable en cada punto presenta dependencia tanto de reacciones locales como de difusión desde los puntos cercanos. Su forma general puede verse en la ecuación (\ref{eq:reaccion_difusion}). El primer término de la derecha corresponde a la componente difusiva y el segundo a la reactiva, en este caso modelada como el polinomio $P(n)$.
 
 \begin{equation}
-  \nabla^2 V(\vec{x}) = \frac{-\rho(\vec{x})}{\epsilon}
-  \label{eq:eq_poisson}
+  \dfrac{dn}{dt} = \gamma \dfrac{d^2n}{dx^2} + P(n)
+  \label{eq:reaccion_difusion}
 \end{equation}
 
-Si la distribución de las cargas eléctricas es muy compleja, resolver esta ecuación de forma analítica puede ser imposible. Debido a que en experimentos reales la carga no necesariamente se ordena de forma sencilla, se vuelve necesario el estudiar e implementar métodos numéricos que permitan resolver esta ecuación para mayor diversidad de geometrías.
+En este trabajo se implementa una clase en python que permite crear un sistema de reacción-difusión unidimensional y resolverlo para un intervalo de tiempo escogido por el usuario. Se incluyen métodos que permiten setear la variable $\gamma$, los coeficientes del polinomio $P(n)$ y las condiciones iniciales y de borde.
 
-En este trabajo se implementa un programa que permite resolver la ecuación de Poisson en dos dimensiones para una geometría de difícil integración analítica utilizando el algoritmo de relajación.
+\section{Descripción de la solución}
 
-\subsection{Descripción del problema}
+La clase implementada permite resolver cualquier sistema de reacción-difusión que posea la forma de la ecuación (\ref{eq:reaccion_difusion}). En el archivo \emph{main\_p1.py} adjunto a este informe hay un ejemplo bien comentado con los pasos a seguir para inicializar el programa, en este caso con la ecuación de Fisher-KPP.
+ 
+\subsection{Algoritmo de integración}
 
-Se debe integrar la Ecuación de Poisson en 2D para una caja rectangular con los siguientes requerimientos:
+Para integrar la ecuación de forma numérica se opta por utilizar dos métodos, Crank-Nicolson para la parte de difusión y una versión modificada del método de Euler para la de reacción. La modificación ha sido una elaboración propia, y es justificada a continuación.
 
-\begin{enumerate}
-  \item Dimensiones de 10 [cm] x 15 [cm]
-  \item Condiciones de borde: 
-  \begin{enumerate}
-    \item Potencial $V = 0$ en todo el perímetro.
-    \item C.B. derivativa: $\frac{dV}{dy} = 1$ en la línea $x = [-3:3]$; $y = -5.5$ [cm] respecto al centro de la caja.
-  \end{enumerate}
-  \item Letra "F" de carga total $1[C]$ encerrada en un rectángulo centrado de 5 [cm] x 7 [cm].
-\end{enumerate}
-
-
-\section{Implementación}
-
-\subsection{Software}
-
-La solución del problema se realizó implementando los archivos \emph{main.py} y \emph{box.py}.
-
-El archivo \emph{box.py} es una clase que contiene todos los métodos necesarios para operar y simular el problema solicitado, incluyendo elementos que permiten operar con coordenadas en centímetros, dibujar cargas en la caja, escribir condiciones de borde incluyendo derivativas e integrar la Ecuación de Poisson.
-
-Por otro lado el archivo \emph{main.py} es el archivo ejecutable. Se utiliza para crear objetos caja, definir sus parámetros, iniciar las operaciones de cálculo y presentar los resultados.
-
-La caja se representa usando dos matrices con resolución $h=0.1$ [cm]. Una matriz se utiliza para almacenar los valores de voltaje y condiciones de borde y la otra almacena la distribución de carga en el espacio. En la Figura (\ref{fig:situacion_inicial})
-
-Esta solución posee la ventaja de almacenar la carga de inmediato en memoria. Así, para calcular el potencial en cada punto basta leer su casilla correspondiente de la matriz de carga para obtener su valor local. Con ellos se simplifica la implementación del programa y se adquiere más velocidad al privilegiar un acceso directo a memoria sobre otras alternativas como consulta de índices o árboles de decisión.
-
-\begin{figure}
-  \centering
-  \includegraphics[scale=0.5]{images/situacion_inicial.png}
-  \caption{Situacion inicial de las cajas de carga y voltaje. Se observa la letra 'F' dibujada en la caja de carga y las condición $V=0$ en todo el borde de la caja de potencial. Las unidades de carga son Coulomb y las de potencial, Voltaje.}
-  \label{fig:situacion_inicial}
-\end{figure}
-
-
-\subsection{Algoritmo de relajación en 2D}
-\label{sec:algoritmo}
-
-El algoritmo de relajación consiste en calcular el valor de cada punto de una matriz usando los adyacentes durante sucesivas iteraciones, deteniéndose cuando se alcanza convergencia. Por convergencia se entiende el instante en que la diferencia entre dos iteraciones es menor a una determinada tolerancia para todos los puntos. En el caso de la ecuación de poisson, cada iteración del algoritmo de relajación calcula el voltaje de la celda $(i, j)$ usando la ecuación (\ref{eq:relajacion_poisson}). Para resaltar el efecto de las cargas se escoge $\epsilon = 5\cdot10^{-4}$ [F/m].
+Inicialmente consideremos el caso en que no hay componente de difusión. La ecuación (\ref{eq:reaccion_difusion}) queda escrita en forma numérica como se muestra en (\ref{eq:no_difusion}). Los subíndices $(x,t)$ en este caso representan posiciones y tiempos discretos y $h$ es el paso temporal de la integración.
 
 \begin{equation}
-  V_{i,j}^{next} = \frac{1}{4} (V_{i+1,j} + V_{i-1,j} + V_{i,j+1} + V_{i,j-1} + h^2 \frac{\rho_{i,j}}{\epsilon}) 
-  \label{eq:relajacion_poisson}
-\end{equation}
+  \frac{n_{x,t+1} - n_{x,t}}{h} = P(n_{x,y})
+  \label{eq:no_difusion}
+\end{equation} 
 
-En el programa se implementa una modificación a este algoritmo, que se puede observar en la fórmula (\ref{eq:relajacion_poisson_mejorada}). Con ésta se aprovecha que el cálculo de dos de los términos de la siguiente iteración se realizaron con anterioridad, que junto con el nuevo parámetro w permiten acelerar la convergencia.
-
-\begin{equation}
-  V_{i,j}^{next} = (1 - w)V_{i,j} + \frac{w}{4}(V_{i+1,j} + V_{i-1,j}^{next} + V_{i,j+1} + V_{i,j-1}^{next} + h^2 \rho_{i,j})
-  \label{eq:relajacion_poisson_mejorada}
-\end{equation}
-
-Se escoge una tolerancia de $10^{-7}$ para determinar la finalización del algoritmo. Si se realizan más de 800 iteraciones se asume que no hay convergencia bajo los parámetros entregados y se interrumpe la ejecución.
-
-\subsection{Condición de borde derivativa}
-
-Para implementar la condición de borde derivativa se discretiza la derivada $\frac{dV}{dy} = 1$, quedando:
+Que se puede integrar usando el método de Euler, como se indica en la ecuación (\ref{eq:metodo_euler}). Se observa que el lado derecho consiste simplemente en la actualización de la variable $n$ usando su pendiente en cada instante de tiempo. Apartemos esto un momento para estudiar la parte difusiva, pero no debemos olvidarlo aún.
 
 \begin{equation}
-  \dfrac{(y_{i,j_0 + 1} - y_{i,j_0})}{h} = 1 \rightarrow y_{i,j_0 + 1} = h + y_{i,j_0}
+  n_{x,t+1}^e = n_{x,t} + h P(n_{x,t})
+  \label{eq:metodo_euler}
 \end{equation}
 
-Donde $j_0$ es el índice de la casilla inmediatamente inferior a la línea $y = -5.5$ [cm], y los $i$ corresponden a los elementos ubicados en $x = [-3:3]$ [cm]. Luego de cada iteración del algoritmo de relajación se impone nuevamente la condición de borde, recalculando $y_{i,j_0 + 1}$. Como $h=0.1$, la línea queda justo entre dos casillas, evitándose que queden puntos sobre ella. Esto simplifica la implementación ya que no hay que calcular potencial justo encima de la condición de borde.
+Suponiendo ahora que sólo hay componente difusiva, la ecuación original puede escribirse como (\ref{eq:no_reaccion}). Aquí se utiliza el promedio entre las segundas derivadas calculadas hacia adelante y atrás para aproximar mejor el cambio en $n$.
 
+\begin{equation}
+  \frac{n_{x,t+1} - n_{x,t}}{h} = \frac{1}{2} \left( \frac{n_{x+1,t+1} - 2 n_{x,t+1} + n_{x-1,t+1} }{h^2} + \frac{n_{x+1,t} - 2 n_{x,t} + n_{x-1,t} }{h^2} \right)
+  \label{eq:no_reaccion}
+\end{equation}
+
+A partir de aquí se puede plantear un sistema de ecuaciones lineales para encontrar el valor de los $n_{x,t+1}$ desconocidos a partir de los $n_{x,t}$ conocidos para todos los puntos $x$ simultáneamente. Éste es el llamado método de Crank-Nicolson, explicado en múltiples excelentes referencias \footnote{Por ejemplo el documento "Solucion Numerica de la Ecuacion de Calor por el Metodo de las Diferencias Finitas", realizado por Miguel Caro C. del Departamento de Matematicas de la Universidad del Atlantico de Colombia, entre otros. Puede encontrarse en línea en el sitio}.
+
+El resultado de esta operación calcula todos los $n_{x,t+1}$. A grandes rasgos el resultado de una iteración puede describirse como se ve en la ecuación (\ref{eq:actualizacion_nicolson}), donde $CN( \Delta x, h, \mathbf{n} )$ es el término de actualización, $\Delta x$ la distancia entre puntos en unidades de longitud físicas y $\mathbf{n}$ el vector que contiene todos los $n_{x,t}$.
+
+\begin{equation}
+  n_{x,t+1}^{cn} = n_{x,t} + CN( \Delta x, h, \mathbf{n} )
+  \label{eq:actualizacion_nicolson}
+\end{equation} 
+
+En principio, calcular el valor completo de $n_{x,t+1}$ debiese ser tan sencillo como sumar $n_{x,t+1} = n_{x,t+1}^{cn} + n_{x,t+1}^{e}$, pero al hacer esto aparece un problema. Como se ve en la ecuación (\ref{eq:solucion_mala}), al hacer esta operación aparece un término $2n_{x,t}$. Este término es espurio y debe corregirse ya que el espíritu de la integración numérica es ir actualizando $n_{x,t}$ usando sus tasas de cambio, dadas en este caso por $CN(...)$ y $P(n)$. 
+
+\begin{equation}
+  n_{x,t+1} = n_{x,t+1}^{cn} + n_{x,t+1}^{e} = \mathbf{2n_{x,t}} + CN( \Delta x, h, \mathbf{n} ) + h P(n_{x,t})
+  \label{eq:solucion_mala}
+\end{equation}
+
+Para corregir el inconveniente, se opta por modificar el método de euler, dejándolo de la forma $n_{x,t+1}^{e^*} = h P(n_{x,t})$. Tras esta modificación, la ecuación (\ref{eq:solucion_mala}) toma la forma (\ref{eq:solucion_buena}), que como se ve en secciones posteriores logra integrar correctamente el sistema de difusión-reacción.
+
+\begin{equation}
+  n_{x,t+1} = n_{x,t+1}^{cn} + n_{x,t+1}^{e^*} = n_{x,t} + CN( \Delta x, h, \mathbf{n} ) + h P(n_{x,t})
+\label{eq:solucion_buena}
+\end{equation}
 
 \section{Resultados}
 
-Los resultados del algoritmo de cálculo pueden verse en la Figura (\ref{fig:volt_calculado}). Como se indicó en la sección \ref{sec:algoritmo}, se escoge un $\epsilon$ tal que el potencial causado por las cargas pueda apreciarse junto a la condición de borde.
+\subsection{Caso 1}
+
+En este caso se modela un sistema de Fisher-KPP, el cual consiste en la siguiente ecuación:
+
+\begin{equation}
+  \frac{\partial n}{\partial t} = \gamma \frac{\partial^2n}{\partial x^2} + \mu n - \mu n^2
+  \label{Fisher-KPP}
+\end{equation}
+
+En este caso $n$ representa la densidad de una especie en función del tiempo y la posición. Los parámetros usados son:
+
+\begin{enumerate}
+  \item Largo de 1 [m]
+  \item Discretizado de 500 puntos
+  \item $\gamma$ = 0.001
+  \item $\mu  = 1.5$
+  \item Resolución: $h = 0.001$[s], $\Delta x = 0.002$[m]
+  \item Condiciones de borde: $n(t, x=0) = 1$ y $n(t, x=1) = 0$
+  \item Condiciones iniciales: $ n(0, x) = e^{-x^2/0.1} $
+  \item Tiempo final de integración: t_f = 4[s]
+\end{enumerate}
+
+Tras integrar la ecuación para 4 segundos, se obtienen los resultados de la Figura \ref{fig:resultados_p1}.
 
 \begin{figure}
   \centering
-  \includegraphics[scale = 0.7]{images/volt_calculado}
-  \caption{Resultado del algoritmo de integración. Se observa claramente el efecto de la distribución de las cargas y las condiciones de borde en el potencial.}
-  \label{fig:volt_calculado}
+  \includegraphics{images/resultados_p1.png}
 \end{figure}
 
+
+
 \section{Conclusiones}
-
-El algoritmo de relajación ha mostrado ser una herramienta simple y bastante eficaz para resolver el problema de integración de la ecuación de Poisson. Se debe notar que si se utilizase una distribución de carga con dependencia temporal $\rho(\vec{x}, t)$, el algoritmo de relajación puede ser aplicado para calcular el potencial de la caja en cada instante de la malla de tiempos, permitiendo simular sistemas con comportamiento dinámico en régimen electro cuasiestático.
-
-Además se puede intuir que implementar este algoritmo en sistemas de tres dimensiones debiese ser análogo, lo que abre posibilidades de aplicación de veriones mejoradas de este programa en áreas como la ingeniería, en particular para asistir el diseño de condensadores y elementos similares que operen en bajas frecuencias.
-
-En el área de software, tanto el algoritmo como el uso de la caja de cargas permiten concluir que una buena forma de acelerar los cálculos es evitar el cálculo redundante aprovechando siempre que se pueda la posibilidad de utilizar datos almacenados en la memoria.
 
 \end{document}
