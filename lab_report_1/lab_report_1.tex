@@ -43,7 +43,7 @@
 %	DOCUMENT INFORMATION
 %----------------------------------------------------------------------------------------
 
-\title{M\'etodos num\'ericos para la Ciencia e Ingenier\'ia \\ Tarea 6: Ecuación de reacción-difusión} % Title
+\title{M\'etodos num\'ericos para la Ciencia e Ingenier\'ia \\ Tarea 6: Ecuaciones de reacción-difusión} % Title
 
 \author{Felipe Toledo Bittner} % Author name
 
@@ -73,6 +73,7 @@ En este trabajo se implementa una clase en python que permite crear un sistema d
 La clase implementada permite resolver cualquier sistema de reacción-difusión que posea la forma de la ecuación (\ref{eq:reaccion_difusion}). En el archivo \emph{main\_p1.py} adjunto a este informe hay un ejemplo bien comentado con los pasos a seguir para inicializar el programa, en este caso con la ecuación de Fisher-KPP.
  
 \subsection{Algoritmo de integración}
+\label{sec:algoritmo_integracion}
 
 Para integrar la ecuación de forma numérica se opta por utilizar dos métodos, Crank-Nicolson para la parte de difusión y una versión modificada del método de Euler para la de reacción. La modificación ha sido una elaboración propia, y es justificada a continuación.
 
@@ -97,7 +98,7 @@ Suponiendo ahora que sólo hay componente difusiva, la ecuación original puede 
   \label{eq:no_reaccion}
 \end{equation}
 
-A partir de aquí se puede plantear un sistema de ecuaciones lineales para encontrar el valor de los $n_{x,t+1}$ desconocidos a partir de los $n_{x,t}$ conocidos para todos los puntos $x$ simultáneamente. Éste es el llamado método de Crank-Nicolson, explicado en múltiples excelentes referencias \footnote{Por ejemplo el documento "Solucion Numerica de la Ecuacion de Calor por el Metodo de las Diferencias Finitas", realizado por Miguel Caro C. del Departamento de Matematicas de la Universidad del Atlantico de Colombia, entre otros. Puede encontrarse en línea en el sitio}.
+A partir de aquí se puede plantear un sistema de ecuaciones lineales para encontrar el valor de los $n_{x,t+1}$ desconocidos a partir de los $n_{x,t}$ conocidos para todos los puntos $x$ simultáneamente. Éste es el llamado método de Crank-Nicolson, explicado en múltiples excelentes referencias \footnote{Por ejemplo el documento "Solucion Numerica de la Ecuacion de Calor por el Metodo de las Diferencias Finitas", realizado por Miguel Caro C. del Departamento de Matematicas de la Universidad del Atlantico de Colombia, entre otros. Puede encontrarse en línea en el sitio http://www.icmc.usp.br/CMS/Arquivos/arquivos\_enviados/BIBLIOTECA\_113\_RT\_327.pdf}.
 
 El resultado de esta operación calcula todos los $n_{x,t+1}$. A grandes rasgos el resultado de una iteración puede describirse como se ve en la ecuación (\ref{eq:actualizacion_nicolson}), donde $CN( \Delta x, h, \mathbf{n} )$ es el término de actualización, $\Delta x$ la distancia entre puntos en unidades de longitud físicas y $\mathbf{n}$ el vector que contiene todos los $n_{x,t}$.
 
@@ -141,18 +142,60 @@ En este caso $n$ representa la densidad de una especie en función del tiempo y 
   \item Resolución: $h = 0.001$[s], $\Delta x = 0.002$[m]
   \item Condiciones de borde: $n(t, x=0) = 1$ y $n(t, x=1) = 0$
   \item Condiciones iniciales: $ n(0, x) = e^{-x^2/0.1} $
-  \item Tiempo final de integración: t_f = 4[s]
+  \item Tiempo final de integración: $t_f = 4[s]$
 \end{enumerate}
 
-Tras integrar la ecuación para 4 segundos, se obtienen los resultados de la Figura \ref{fig:resultados_p1}.
+Tras integrar la ecuación para 4 segundos, se obtienen los resultados de la siguiente figura:
 
-\begin{figure}
+\begin{figure}[ht]
   \centering
-  \includegraphics{images/resultados_p1.png}
+  \includegraphics[scale = 0.55]{images/resultados_p1.png}
+  \label{fig:resultados_p1}
+  \caption{Resultados de la integración de la ecuación de Fisher-KPP.}
 \end{figure}
 
+Se observa que la densidad comienza a aumentar hacia la derecha con el paso del tiempo. Una forma de entender esto es viendo la condición de borde izquierda como una fuente de densidad, la que intenta difundir hacia la derecha generando una ola. A medida que nos alejamos de la fuente, comienza a dominar el término de reacción de competencia ($-\mu n^2$), acotando los máximos valores de $n$ llegando a 0 en el extremo derecho debido a la otra condición de borde.
 
+\subsection{Caso 2}
+
+Ahora se integra la ecuación de Newell-Whitehead-Segel:
+
+\begin{equation}
+  \frac{\partial n}{\partial t} = \gamma \frac{\partial^2n}{\partial x^2} + \mu ( n - n^3 )
+\end{equation}
+
+Usando las siguientes condiciones:
+
+\begin{enumerate}
+  \item Largo de 1 [m]
+  \item Discretizado de 500 puntos
+  \item $\gamma$ = 0.001
+  \item $\mu  = 1.5$
+  \item Resolución: $h = 0.001$[s], $\Delta x = 0.002$[m]
+  \item Condiciones de borde: $n(t, x=0) = 0$ y $n(t, x=1) = 0$
+  \item Condiciones iniciales: $ n(0, x) = random(-0.3,0.3) $
+  \item Tiempo final de integración: $t_f = 4[s]$
+\end{enumerate}
+
+En este caso se resuelve para dos conjuntos de condiciones iniciales donde cada n toma un valor aleatorio entre -0.3 y 0.3, generado usando la función \emph{random.uniform()} de numpy. Con el fin de obtener resultados replicables se establecen dos semillas $s1 = 317$ y $s2 = 119$ con la función \emph{random.seed(<int>)} de la misma librería.
+
+Los resultados se presentan en la figura a continuación:
+
+\begin{figure}[ht]
+  \centering
+  \includegraphics[scale = 0.55]{images/resultados_p2.png}
+  \label{fig:resultados_p2}
+  \caption{Resultados de la integración de la ecuación de Newell-Whitehead-Segel para dos condiciones iniciales distintas.}
+\end{figure}
+
+De las figuras se puede apreciar que la diferencia en las condiciones iniciales genera resultados completamente distintos tras el período de cálculo, lo que puede explicarse argumentando que se está integrando cerca de un punto de equilibrio inestable. El respaldo de esta afirmación proviene de que los valores aleatorios están acotados entre [-0.3, 0.3], por lo que se comienza a resolver desde puntos más cercanos a $0$ (punto de equilibrio inestable) que a $\pm 1$ (puntos de equilibrio estable).
 
 \section{Conclusiones}
+
+El principal logro de esta tarea es que se logra implementar código que permite trabajar con sistemas de difusión-reacción de forma general, operando además bajo el paradigma de programación orientada a objetos. Esto, junto a la documentación aquí presentada, los comentarios en el código y los ejemplos desarrollados debiese permitir a cualquier otra persona usar este código de forma explícita o encapsulada para resolver sus propios sistemas de difusión-reacción en una dimensión.
+
+También se concluye que al utilizar varios métodos simultáneos de integración numérica se debe considerar su interacción para no obtener elementos redundantes en el cálculo, como se vió en la sección \ref{sec:algoritmo_integracion}
+
+Para el trabajo futuro se propone implementar optimizaciones de forma consciente en el código para disminuir el tiempo de cálculo de las rutinas más pesadas. Para este caso particular, por ejemplo, sería recomendable mejorar la velocidad del algoritmo de Crank-Nicolson, ya que es iterado muchas veces y toma un tiempo mayor que las otras rutinas debido a que realiza operaciones con matrices (inversión y multiplicación).
 
 \end{document}
