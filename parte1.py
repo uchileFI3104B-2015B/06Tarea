@@ -30,7 +30,11 @@ def calc_b(b, M, r, h, mu):
     calcula el valor de b para el metodo de crank nicolson
     '''
     for j in range(1, M - 1):
-        b[j] = r * n[j+1] + (1 - 2 * r) * n[j] +  r * n[j-1] + h * mu * (n[j] - n[j] ** 2)
+        # se define a para que la linea siguiente no quede tan grande porque
+        # no pude lograr que funcionara el corte de la linea :s
+        a = h * mu * (n[j] - n[j] ** 2)
+        b[j] = r * n[j+1] + (1 - 2 * r) * n[j] + r * n[j-1] + a
+
     pass
 
 
@@ -58,17 +62,14 @@ def avanza_tiempo(n, n_sig, alpha, beta, M):
     for i in range(M - 12, 0, -1):
         n_sig[i] = alpha[i] * n_sig[i+1] + beta[i]
     pass
-
-
-
 # main
 # inicializacion
-#N_x = 500
-#N_t = 1000
+# N_x = 500  inicializaciones comentadas son las que no funcionaron
+# N_t = 1000
 mu = 1.5
 gamma = 0.001
-#dx = (x_d - x_i) / (N_x - 1)
-#dt = (t_f - t_i) / (N_t - 1)
+# dx = (x_d - x_i) / (N_x - 1)
+# dt = (t_f - t_i) / (N_t - 1)
 dx = 0.002
 dt = 0.002
 N_x = 500

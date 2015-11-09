@@ -12,14 +12,14 @@ from __future__ import division
 import numpy as np
 import matplotlib.pyplot as plt
 
-#semilla
-#np.random.seed(123)
+# semilla
+# np.random.seed(123)
 np.random.seed(8)
-#np.random.seed(888888888)
+# np.random.seed(888888888)
 # funciones base
 '''
 def cond_ini(n, M):
-    #establece las condiciones iniciales del problema
+    #establece las condiciones iniciales del problema, no se logra implementar
     for i in range(M):
         n[i] = np.random.uniform(low=-0.3, high=0.3, size=M)
         n[0] = 0 # cond iniciales
@@ -33,7 +33,10 @@ def calc_b(b, M, r, h, mu):
     calcula el valor de b para el metodo de crank nicolson
     '''
     for j in range(1, M - 1):
-        b[j] = r * n[j+1] + (1 - 2 * r) * n[j] +  r * n[j-1] + h * mu * (n[j] - n[j] ** 3)
+        # se define a para que la linea siguiente no quede tan grande porque
+        # no pude lograr que funcionara el corte de la linea :s
+        a = h * mu * (n[j] - n[j] ** 3)
+        b[j] = r * n[j+1] + (1 - 2 * r) * n[j] + r * n[j-1] + a
     pass
 
 
@@ -61,9 +64,6 @@ def avanza_tiempo(n, n_sig, alpha, beta, M):
     for i in range(M - 12, 0, -1):
         n_sig[i] = alpha[i] * n_sig[i+1] + beta[i]
     pass
-
-
-
 # main
 # inicializacion
 mu = 1.5
@@ -107,8 +107,8 @@ plt.subplots_adjust(left=None, bottom=None, right=0.8, top=None, wspace=None,
                     hspace=None)
 plt.xlabel("x")
 plt.ylabel("n(x)")
-#plt.savefig("NWS1.png") #semilla 123
-plt.savefig("NWS2.png") #semilla 8
-#plt.savefig("NSW3.png") #semilla 888888888
+# plt.savefig("NWS1.png")  # semilla 123
+plt.savefig("NWS2.png")  # semilla 8
+# plt.savefig("NSW3.png")  # semilla 888888888
 plt.show()
 plt.draw()
